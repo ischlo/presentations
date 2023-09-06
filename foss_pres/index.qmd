@@ -19,21 +19,22 @@ bibliography: references.bib
 ---
 
 ## Transport mode choice
-The use of a personal vehicle remains a dominant mode of transport even in cities.
-The urban environment has been extensively developed with vehicle use in mind. 
-But this is changing in light of research indicating the negative impact that cars have on cities and their inhabitants. To name a few, noise and particle pollution, congestion, requirement for large parking areas, collision danger [@hidalgoTrillionDollarStreets2020; @fleuryGeospatialAnalysisIndividualbased2021; @Saunders2013].
+
+The use of a personal vehicle remains a dominant mode of transport even in cities. The urban environment has been extensively developed with vehicle use in mind. But this is changing in light of research indicating the negative impact that cars have on cities and their inhabitants. To name a few, noise and particle pollution, congestion, requirement for large parking areas, collision danger [@hidalgoTrillionDollarStreets2020; @fleuryGeospatialAnalysisIndividualbased2021; @Saunders2013].
 
 Active travel (AT) represents a simple yet powerful alternative to private vehicle use. A great amount of car trips on short distances could be made by AT.
 
-Contributing to this shift in priorities involves having accurate representation of walkable and cyclable networks. And a quantitative understanding of AT mobility. 
+Contributing to this shift in priorities involves having accurate representation of walkable and cyclable networks. And a quantitative understanding of AT mobility.
 
 Developing further models for predicting the use of such modes of transport is important for promoting the right change in the transport infrastructure.
 
 ### The London Plan
-Puts active travel in the center of the discussion on redevelopment of local areas and transport connectivity.
+
+Puts active travel in the center of the discussion on redevelopment of local areas and global transport connectivity.
 
 Policy D1 London's form, character and capacity for growth
-: Area assessments should cover the elements ... 4) Existing and planned transport networks (particularly walking & cycling networks) and public transportation connectivity.
+
+:   Area assessments should cover the elements ... 4) Existing and planned transport networks (particularly walking & cycling networks) and public transportation connectivity.
 
 Cities mentioning AT as a priority in their mobility strategy are spread around the world: [Chicago](https://www.chicago.gov/content/dam/city/depts/cdot/CDOT%20Projects/Strategic_Plan/Strategic_Plan_for_Transportation21.pdf), [New York](https://www.nyc.gov/site/planning/planning-level/transportation/transportation-overview.page), [Singapour](https://www.ura.gov.sg/Corporate/Planning/Master-Plan/Themes/Convenient-and-Sustainable-Mobility), [Paris](https://www.apc-paris.com/plan-climat/mobilite) and more...
 
@@ -51,26 +52,19 @@ Photo by <a href="https://unsplash.com/fr/@archduk3?utm_source=unsplash&utm_medi
 :::
 
 ::: columns
-
 ::: {.column width="48%"}
-
 ![](img/sandals.jpeg){.fragment}
-
 :::
 
 ::: {.column width="48%"}
-
 ![](img/bicycle.jpg){.fragment}
-
+:::
+:::
 :::
 
-:::
+## Context
 
-:::
-
-## Context 
-
-The [QUANT model](https://www.turing.ac.uk/research/research-projects/quantitative-urban-analytics-quant) for benchmarking transport or employment change from the point of view of sustainability and benefit for commuting journeys. A country scale SIM. Ultimately provide a user friendly, open source, highly efficient model capable of running country scale scenarios within seconds to the relevant actors.
+The [QUANT model](https://www.turing.ac.uk/research/research-projects/quantitative-urban-analytics-quant) [@QUANT] for benchmarking transport or employment change from the point of view of sustainability and benefit for commuting journeys. A country scale SIM. Ultimately provide a user friendly, open source, highly efficient model capable of running country scale scenarios within seconds to the relevant actors.
 
 ### Methodology
 
@@ -120,11 +114,23 @@ One being the main reference for open source georeferenced information in the wo
 :::
 :::
 
-![](img/fig1.png){fig-align="center"}
+\|\> ![](img/fig1.png){fig-align="center"}
 
 ## Network: cycling and walking
 
 ![](img/osmnxprofiles2.png){fig-align="center"}
+
+## Routing
+
+### Centroids
+
+-   *Geometric*
+-   *Network*
+    -   Subset of road nodes inside urbanised areas (exclude parks, water bodies etc...)
+-   *Commute*
+    -   population weighted to workplace zone
+
+![](img/cent2.png){fig-align="center"}
 
 ## Routing
 
@@ -141,18 +147,6 @@ routing_benchmark <- microbenchmark::microbenchmark(...)
 
 The **cppRouting** package is used to have a local, self-sufficient workflow, without compromising the performance.
 
-## Routing
-
-### Centroids
-
--   *Geometric*
--   *Network*
-    -   Subset of road nodes inside urbanised areas (exclude parks, water bodies etc...)
--   *Commute*
-    -   population weighted to workplace zone
-
-![](img/cent2.png){fig-align="center"}
-
 # Spatial interaction model
 
 ## Model
@@ -161,9 +155,8 @@ The **cppRouting** package is used to have a local, self-sufficient workflow, wi
 
 Using the [`wu03ew`](https://www.nomisweb.co.uk/census/2011/wu03EW) table at MSOA level from the 2011 census, we build flow matrices.
 
-:::: columns
-
-::: {.column width=75%}
+::: columns
+::: {.column width="75%"}
 ```{r}
 
 library(data.table)
@@ -177,24 +170,24 @@ flows_raw <- data.table::fread('data/wu03ew_msoa_samp.csv')
 knitr::kable(flows_raw[,.(`Area of residence`,`Area of workplace`,Bicycle,`On foot`)])
 
 ```
-
 :::
 
-::: {.column width=25%}
+::: {.column width="25%"}
 ```{r}
 
 knitr::kable(flows_raw[,.(at=Bicycle+`On foot`)])
 
 ```
-
 :::
-
-::::
-
+:::
 
 ### SIM
 
 A doubly constrained spatial interaction model that is calibrated on the distance matrices (in km) and flow, using the foot and bike variables from the flows.
+
+$$ 
+T_{ij}=A_i O_i B_j D_j exp(-\beta d_{ij})
+$$
 
 ### Package
 
@@ -246,17 +239,24 @@ Notably, it takes about 50 milliseconds for one model run on London's $983\times
 ### Links
 
 ::: columns
-::: {.column width="50%"}
-Methodological approach to active travel commuting models
 
-![Code repository](img/quant_at_qr.png){width="35%"}
+::: {.column width="50%"}
+
+Active-travel modelling: a methodological approach to networks for walking and cycling commuting analysis
+
+![Code repository](img/at_arxiv_qr.png){width="35%"}
 :::
 
 ::: {.column width="50%"}
-**cppSim** - fast and memory efficient doubly constrained sims
+
+**cppSim** - fast and memory efficient doubly constrained SIMs
 
 ![cppSim package](img/cppsim_qr.png){width="35%"}
+
 :::
+
 :::
+
+# Thank you for your attention !
 
 ## References

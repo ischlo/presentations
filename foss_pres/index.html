@@ -433,11 +433,11 @@
 <p>Contributing to this shift in priorities involves having accurate representation of walkable and cyclable networks. And a quantitative understanding of AT mobility.</p>
 <p>Developing further models for predicting the use of such modes of transport is important for promoting the right change in the transport infrastructure.</p>
 <h3 id="the-london-plan">The London Plan</h3>
-<p>Puts active travel in the center of the discussion on redevelopment of local areas and transport connectivity.</p>
+<p>Puts active travel in the center of the discussion on redevelopment of local areas and global transport connectivity.</p>
 <dl>
 <dt>Policy D1 London’s form, character and capacity for growth</dt>
 <dd>
-Area assessments should cover the elements … 4) Existing and planned transport networks (particularly walking &amp; cycling networks) and public transportation connectivity.
+<p>Area assessments should cover the elements … 4) Existing and planned transport networks (particularly walking &amp; cycling networks) and public transportation connectivity.</p>
 </dd>
 </dl>
 <p>Cities mentioning AT as a priority in their mobility strategy are spread around the world: <a href="https://www.chicago.gov/content/dam/city/depts/cdot/CDOT%20Projects/Strategic_Plan/Strategic_Plan_for_Transportation21.pdf">Chicago</a>, <a href="https://www.nyc.gov/site/planning/planning-level/transportation/transportation-overview.page">New York</a>, <a href="https://www.ura.gov.sg/Corporate/Planning/Master-Plan/Themes/Convenient-and-Sustainable-Mobility">Singapour</a>, <a href="https://www.apc-paris.com/plan-climat/mobilite">Paris</a> and more…</p>
@@ -470,7 +470,7 @@ Area assessments should cover the elements … 4) Existing and planned transport
 </section>
 <section id="context" class="slide level2">
 <h2>Context</h2>
-<p>The <a href="https://www.turing.ac.uk/research/research-projects/quantitative-urban-analytics-quant">QUANT model</a> for benchmarking transport or employment change from the point of view of sustainability and benefit for commuting journeys. A country scale SIM. Ultimately provide a user friendly, open source, highly efficient model capable of running country scale scenarios within seconds to the relevant actors.</p>
+<p>The <a href="https://www.turing.ac.uk/research/research-projects/quantitative-urban-analytics-quant">QUANT model</a> <span class="citation" data-cites="QUANT">(<a href="#/references" role="doc-biblioref" onclick="">Batty and Milton 2021</a>)</span> for benchmarking transport or employment change from the point of view of sustainability and benefit for commuting journeys. A country scale SIM. Ultimately provide a user friendly, open source, highly efficient model capable of running country scale scenarios within seconds to the relevant actors.</p>
 <h3 id="methodology">Methodology</h3>
 <p>The many open source tools out there aim at solving various aspects, combining them into one workflow that allows to build a full, self-sufficient model from scratch with ease of scalability, review some of the tools on the way and develop when missing appeared relevant.</p>
 <h3 id="network-routing-spatial-interaction">Network, Routing, Spatial interaction</h3>
@@ -513,23 +513,13 @@ Area assessments should cover the elements … 4) Existing and planned transport
 <p>One being the main reference for open source georeferenced information in the world, the other being the official data set of roads in the UK.</p>
 </div>
 </div>
-
-<img data-src="img/fig1.png" class="r-stretch quarto-figure-center"></section>
+<p>|&gt; <img data-src="img/fig1.png" data-fig-align="center"></p>
+</section>
 <section id="network-cycling-and-walking" class="slide level2">
 <h2>Network: cycling and walking</h2>
 
 <img data-src="img/osmnxprofiles2.png" class="r-stretch quarto-figure-center"></section>
 <section id="routing" class="slide level2">
-<h2>Routing</h2>
-<p>Comparing commonly used packages: <strong>tidygraph</strong> <span class="citation" data-cites="tidygraph">(<a href="#/references" role="doc-biblioref" onclick="">Pedersen 2023</a>)</span> and <strong>sf_networks <span class="citation" data-cites="sfnetworks">(<a href="#/references" role="doc-biblioref" onclick="">Meer et al. 2022</a>)</span></strong>, wrappers of <strong>igraph</strong> <span class="citation" data-cites="igraph">(<a href="#/references" role="doc-biblioref" onclick="">Csardi and Nepusz 2006</a>)</span>, <strong>dodgr</strong> <span class="citation" data-cites="dodgr2019">(<a href="#/references" role="doc-biblioref" onclick="">Padgham 2019</a>)</span><strong>, cppRouting <span class="citation" data-cites="cppRouting">(<a href="#/references" role="doc-biblioref" onclick="">Larmet 2022</a>)</span></strong>.</p>
-<h3 id="benchmark">Benchmark</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>routing_benchmark <span class="ot">&lt;-</span> microbenchmark<span class="sc">::</span><span class="fu">microbenchmark</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-
-<img data-src="img/routing_benchmarks.png" style="width:70.0%" class="r-stretch"><p>The <strong>cppRouting</strong> package is used to have a local, self-sufficient workflow, without compromising the performance.</p>
-</section>
-<section id="routing-1" class="slide level2">
 <h2>Routing</h2>
 <h3 id="centroids">Centroids</h3>
 <ul>
@@ -545,6 +535,16 @@ Area assessments should cover the elements … 4) Existing and planned transport
 </ul>
 
 <img data-src="img/cent2.png" class="r-stretch quarto-figure-center"></section>
+<section id="routing-1" class="slide level2">
+<h2>Routing</h2>
+<p>Comparing commonly used packages: <strong>tidygraph</strong> <span class="citation" data-cites="tidygraph">(<a href="#/references" role="doc-biblioref" onclick="">Pedersen 2023</a>)</span> and <strong>sf_networks <span class="citation" data-cites="sfnetworks">(<a href="#/references" role="doc-biblioref" onclick="">Meer et al. 2022</a>)</span></strong>, wrappers of <strong>igraph</strong> <span class="citation" data-cites="igraph">(<a href="#/references" role="doc-biblioref" onclick="">Csardi and Nepusz 2006</a>)</span>, <strong>dodgr</strong> <span class="citation" data-cites="dodgr2019">(<a href="#/references" role="doc-biblioref" onclick="">Padgham 2019</a>)</span><strong>, cppRouting <span class="citation" data-cites="cppRouting">(<a href="#/references" role="doc-biblioref" onclick="">Larmet 2022</a>)</span></strong>.</p>
+<h3 id="benchmark">Benchmark</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>routing_benchmark <span class="ot">&lt;-</span> microbenchmark<span class="sc">::</span><span class="fu">microbenchmark</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+<img data-src="img/routing_benchmarks.png" style="width:70.0%" class="r-stretch"><p>The <strong>cppRouting</strong> package is used to have a local, self-sufficient workflow, without compromising the performance.</p>
+</section>
 <section>
 <section id="spatial-interaction-model" class="title-slide slide level1 center">
 <h1>Spatial interaction model</h1>
@@ -617,6 +617,9 @@ Area assessments should cover the elements … 4) Existing and planned transport
 </div>
 <h3 id="sim">SIM</h3>
 <p>A doubly constrained spatial interaction model that is calibrated on the distance matrices (in km) and flow, using the foot and bike variables from the flows.</p>
+<p><span class="math display">\[
+T_{ij}=A_i O_i B_j D_j exp(-\beta d_{ij})
+\]</span></p>
 <h3 id="package">Package</h3>
 <p>To perform the this step, a set of functions in R and C++ were developed as a package called <strong>cppSim</strong> and published on github and (hopefully) soon on CRAN.</p>
 <div class="cell">
@@ -667,15 +670,15 @@ Area assessments should cover the elements … 4) Existing and planned transport
 <h3 id="links">Links</h3>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p>Methodological approach to active travel commuting models</p>
+<p>Active-travel modelling: a methodological approach to networks for walking and cycling commuting analysis</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/quant_at_qr.png" style="width:35.0%"></p>
+<p><img data-src="img/at_arxiv_qr.png" style="width:35.0%"></p>
 <figcaption>Code repository</figcaption>
 </figure>
 </div>
 </div><div class="column" style="width:50%;">
-<p><strong>cppSim</strong> - fast and memory efficient doubly constrained sims</p>
+<p><strong>cppSim</strong> - fast and memory efficient doubly constrained SIMs</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="img/cppsim_qr.png" style="width:35.0%"></p>
@@ -684,6 +687,11 @@ Area assessments should cover the elements … 4) Existing and planned transport
 </div>
 </div>
 </div>
+</section></section>
+<section>
+<section id="thank-you-for-your-attention" class="title-slide slide level1 center">
+<h1>Thank you for your attention !</h1>
+
 </section>
 <section id="references" class="slide level2 smaller scrollable">
 <h2>References</h2>
@@ -692,6 +700,9 @@ Area assessments should cover the elements … 4) Existing and planned transport
 
 </div>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-QUANT" class="csl-entry" role="listitem">
+Batty, Michael, and Richard Milton. 2021. <span>“A New Framework for Very Large-Scale Urban Modelling.”</span> <em>Urban Studies</em> 58 (15): 3071–94. <a href="https://doi.org/10.1177/0042098020982252">https://doi.org/10.1177/0042098020982252</a>.
+</div>
 <div id="ref-igraph" class="csl-entry" role="listitem">
 Csardi, Gabor, and Tamas Nepusz. 2006. <span>“The Igraph Software Package for Complex Network Research.”</span> <em>InterJournal</em> Complex Systems: 1695. <a href="https://igraph.org">https://igraph.org</a>.
 </div>
