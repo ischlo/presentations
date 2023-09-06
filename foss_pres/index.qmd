@@ -4,8 +4,18 @@ format:
   revealjs: 
     theme: [pres_style.scss,default]
     fig-align: center
+author: 
+  - name: Ivann Schlosser
+    email: ivann.schlosser.19@ucl.ac.uk
+    url: ischlosser.com
+    affiliations:
+      - name: Centre for advanced spatial analysis (CASA)
+        address: 90 Tottenham Court Road 
+        postal-code: W1T 4TJ
+        city: London
 editor: visual
 logo: img/casa.png
+bibliography: references.bib
 ---
 
 ## Transport in cities
@@ -34,9 +44,9 @@ Photo by <a href="https://unsplash.com/fr/@archduk3?utm_source=unsplash&utm_medi
 
 ## Transport in cities
 
-The urban environment has been extensively developed with vehicle use in mind, but this is changing in light of research indicating the bad impact that cars have on cities. To name a few, noise and particle pollution, requirement for large parking space, collision danger.
+The urban environment has been extensively developed with vehicle use in mind, but this is changing in light of research indicating the negative impact that cars have on cities and their inhabitants. To name a few, noise and particle pollution, requirement for large parking space, collision danger [@hidalgoTrillionDollarStreets2020; @fleuryGeospatialAnalysisIndividualbased2021; @Saunders2013].
 
-AT represents a simple yet powerful alternative to private vehicle use and a great amount of car trips on short distances could be made by AT.
+Active travel (AT) represents a simple yet powerful alternative to private vehicle use. A great amount of car trips on short distances could be made by AT.
 
 Contributing to this shift in priorities involves having accurate representation of walkable and cyclable paths.
 
@@ -96,7 +106,7 @@ One being the main reference for open source georeferenced information in the wo
 
 ## Routing
 
-Comparing commonly used packages.
+Comparing commonly used packages: **tidygraph** [@tidygraph] and **sf_networks [@sfnetworks]**, wrappers of **igraph** [@igraph], **dodgr** [@dodgr2019]**, cppRouting [@cppRouting]**.
 
 ### Benchmark
 
@@ -107,23 +117,23 @@ routing_benchmark <- microbenchmark::microbenchmark(...)
 
 ![](img/routing_benchmarks.png){width="70%"}
 
-The cppRouting package is used to have a local, self-sufficient workflow, without compromising the performance.
+The **cppRouting** package is used to have a local, self-sufficient workflow, without compromising the performance.
 
 ## Routing
 
 ### Centroids
 
--   Geometric
--   Network
+-   *Geometric*
+-   *Network*
     -   Subset of road nodes inside urbanised areas (exclude parks, water bodies etc...)
--   Commute
+-   *Commute*
     -   population weighted to workplace zone
 
 ![](img/cent2.png){fig-align="center"}
 
-# SIM
+# Spatial interaction model
 
-## Doubly contrained
+## Doubly constrained
 
 We use a doubly constrained spatial interaction model that we calibrate on the distance matrices (in km) and flow data from the 2011 census, using the foot and bike variables.
 
@@ -143,7 +153,7 @@ knitr::kable(flows_raw[,.(`Area of residence`,`Area of workplace`,Bicycle,`On fo
 
 ### Package
 
-To perform the modelling step, a set of functions in R and C++ were developed and published as a package called *cppSim* on github and (hopefully) soon on CRAN.
+To perform the modelling step, a set of functions in R and C++ were developed as a package called **cppSim** and published on github and (hopefully) soon on CRAN.
 
 ```{r, echo=TRUE, eval=FALSE}
 
@@ -177,8 +187,6 @@ Notably, it takes about 50 milliseconds for one model run on London's $983\times
 
 -   When combined, the best of both worlds seems to emerge, with high quality of fit, more homogeneous results across networks and the *commute* centroids being slightly better with full OSM and OS networks.
 
-## Live demo (!)
-
 ## Conclusion
 
 -   The emergence good quality open source network data has promoted the development of powerful open tools to manipulate and use them.
@@ -205,3 +213,5 @@ Methodological approach to active travel commuting models
 ![cppSim package](img/cppsim_qr.png){width="35%"}
 :::
 :::
+
+## References
