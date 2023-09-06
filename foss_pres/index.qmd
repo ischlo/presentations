@@ -1,0 +1,207 @@
+---
+title: "Spatial interaction models for active travel commuting"
+format: 
+  revealjs: 
+    theme: [pres_style.scss,default]
+    fig-align: center
+editor: visual
+logo: img/casa.png
+---
+
+## Transport in cities
+
+::: r-stack
+![](img/gwagon.jpg){.fragment fig-align="center" width="50%"}
+
+![](img/flying_car.jpg){.fragment fig-align="center" width="150%"}
+
+::: footer
+Photo by <a href="https://unsplash.com/fr/@jaleu1203?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jakob Leugermann</a> on <a href="https://unsplash.com/fr/photos/S1dumowDUbQ?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+
+Photo by <a href="https://unsplash.com/fr/@archduk3?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Carl Nenzen Loven</a> on <a href="https://unsplash.com/fr/photos/igKjieyjcko?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+:::
+
+::: columns
+::: {.column width="48%"}
+![](img/sandals.jpeg){.fragment}
+:::
+
+::: {.column width="48%"}
+![](img/bicycle.jpg){.fragment}
+:::
+:::
+:::
+
+## Transport in cities
+
+The urban environment has been extensively developed with vehicle use in mind, but this is changing in light of research indicating the bad impact that cars have on cities. To name a few, noise and particle pollution, requirement for large parking space, collision danger.
+
+AT represents a simple yet powerful alternative to private vehicle use and a great amount of car trips on short distances could be made by AT.
+
+Contributing to this shift in priorities involves having accurate representation of walkable and cyclable paths.
+
+Developing further models for predicting the use of such modes of transport is important for promoting the right change in the transport infrastructure.
+
+## Methodology
+
+### Network, Routing, Spatial interaction
+
+In order to get a more comprehensive understanding of the various methods, data sources, existing software available, we experimented with workflows that would combine a testing process of the various steps involved.
+
+::: columns
+::: {.column width="33%"}
+Network
+
+-   Data sources
+-   Profiles based on mode of transport
+-   Software
+-   Consistency, quality
+:::
+
+::: {.column width="33%"}
+Routing
+
+-   Origins and Destinations
+-   Software
+-   Performance
+:::
+
+::: {.column width="33%"}
+Spatial interaction
+
+-   Scalability, Robustness
+-   Quality of fit
+-   Reusability
+:::
+:::
+
+## Network
+
+::: columns
+::: {.column width="30%"}
+-   OpenStreetMap
+-   Ordnance Survey
+:::
+
+::: {.column width="70%"}
+One being the main reference for open source georeferenced information in the world, the other being the official data set of roads in the UK.
+:::
+:::
+
+![](img/fig1.png){fig-align="center"}
+
+## Network: cycling and walking
+
+![](img/osmnxprofiles2.png){fig-align="center"}
+
+## Routing
+
+Comparing commonly used packages.
+
+### Benchmark
+
+```{r, echo=TRUE,include=TRUE,eval=FALSE}
+routing_benchmark <- microbenchmark::microbenchmark(...)
+
+```
+
+![](img/routing_benchmarks.png){width="70%"}
+
+The cppRouting package is used to have a local, self-sufficient workflow, without compromising the performance.
+
+## Routing
+
+### Centroids
+
+-   Geometric
+-   Network
+    -   Subset of road nodes inside urbanised areas (exclude parks, water bodies etc...)
+-   Commute
+    -   population weighted to workplace zone
+
+![](img/cent2.png){fig-align="center"}
+
+# SIM
+
+## Doubly contrained
+
+We use a doubly constrained spatial interaction model that we calibrate on the distance matrices (in km) and flow data from the 2011 census, using the foot and bike variables.
+
+```{r}
+
+library(data.table)
+
+# flows_raw <- data.table::fread('/Users/ivannschlosser/Documents/CASA/data/wu03ew_msoa.csv'
+#                                ,nrows = 3)
+# flows_raw |> fwrite('/Users/ivannschlosser/Documents/presentations/foss_pres/data/wu03ew_msoa_samp.csv')
+
+flows_raw <- data.table::fread('data/wu03ew_msoa_samp.csv')
+
+knitr::kable(flows_raw[,.(`Area of residence`,`Area of workplace`,Bicycle,`On foot`)])
+
+```
+
+### Package
+
+To perform the modelling step, a set of functions in R and C++ were developed and published as a package called *cppSim* on github and (hopefully) soon on CRAN.
+
+```{r, echo=TRUE, eval=FALSE}
+
+model <- cppSim::run_model(flows = flow_matrix
+                           ,distance = distance_matrix
+                           ,beta = beta_best_fit)
+
+```
+
+### Performance
+
+Notably, it takes about 50 milliseconds for one model run on London's $983\times 983$ OD matrix.
+
+`glm` and dependent packages were running out of memory / taking very long. Further development can be done to provide a full set of functionalities around routing, and SIMs as one single R package that would be highly efficient through a C++ back-end set of functions.
+
+## Results
+
+::: {layout="[30,40,30]" layout-valign="top"}
+![](img/quality_fit_cycle.jpg)
+
+![](img/quality_fit_at.jpg)
+
+![](img/quality_fit_walk.jpg)
+:::
+
+-   Greater impact for walking, with high quality of fit especially for commute centroids on all networks.
+
+    -   Probably due to the better estimate of intra flows
+
+-   Less impact on cycling, although regular networks outperform slightly the custom weighted ones.
+
+-   When combined, the best of both worlds seems to emerge, with high quality of fit, more homogeneous results across networks and the *commute* centroids being slightly better with full OSM and OS networks.
+
+## Live demo (!)
+
+## Conclusion
+
+-   The emergence good quality open source network data has promoted the development of powerful open tools to manipulate and use them.
+
+-   We use these tools with the 2011 UK CENSUS data on foot and bicycle commuting flows to:
+
+    -   Compare the different approaches that can be adopted (network profile, routing locations)
+    -   Bring awareness to the data consistency and it's geographic spread
+    -   Develop a reproducible, self-sufficient workflow that is highly efficient even for large scale areas and networks.
+    -   The final step of our analysis required the development of new tools.
+
+### Links
+
+::: columns
+::: {.column width="50%"}
+Methodological approach to active travel commuting models
+
+![Code repository](img/quant_at_qr.png){width="35%"}
+:::
+
+::: {.column width="50%"}
+**cppSim** - fast and memory efficient doubly constrained sims
+
+![cppSim package](img/cppsim_qr.png){width="35%"}
+:::
+:::
