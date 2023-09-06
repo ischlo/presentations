@@ -426,6 +426,22 @@
 </div>
 
 </section>
+<section id="section" class="slide level2">
+<h2></h2>
+<aside class="notes">
+<p>Hello and thank you for having me today at FOSS4G. My name is Ivann and I will be talking about spatial interaction models for active travel commuting, with an open source and reproducible approach. I have been doing this work at the centre for advanced spatial analysis for almost a year and we expect to publish a paper soon, and today I will cover the software related parts of it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
 <section id="transport-mode-choice" class="slide level2">
 <h2>Transport mode choice</h2>
 <p>The use of a personal vehicle remains a dominant mode of transport even in cities. The urban environment has been extensively developed with vehicle use in mind. But this is changing in light of research indicating the negative impact that cars have on cities and their inhabitants. To name a few, noise and particle pollution, congestion, requirement for large parking areas, collision danger <span class="citation" data-cites="hidalgoTrillionDollarStreets2020 fleuryGeospatialAnalysisIndividualbased2021 Saunders2013">(<a href="#/references" role="doc-biblioref" onclick="">Hidalgo 2020</a>; <a href="#/references" role="doc-biblioref" onclick="">Fleury et al. 2021</a>; <a href="#/references" role="doc-biblioref" onclick="">Saunders et al. 2013</a>)</span>.</p>
@@ -441,6 +457,20 @@
 </dd>
 </dl>
 <p>Cities mentioning AT as a priority in their mobility strategy are spread around the world: <a href="https://www.chicago.gov/content/dam/city/depts/cdot/CDOT%20Projects/Strategic_Plan/Strategic_Plan_for_Transportation21.pdf">Chicago</a>, <a href="https://www.nyc.gov/site/planning/planning-level/transportation/transportation-overview.page">New York</a>, <a href="https://www.ura.gov.sg/Corporate/Planning/Master-Plan/Themes/Convenient-and-Sustainable-Mobility">Singapour</a>, <a href="https://www.apc-paris.com/plan-climat/mobilite">Paris</a> and more…</p>
+<aside class="notes">
+<p>The general context is that we are observing a general shift in priority when it comes to mobility. The research of the last few decades has revealed the negative effects that cars have on cities, such as noise &amp; particle pollution, congestion, use of for large parking space.</p>
+<p>To all these problems, active travel represents a simple, cheap, yet very powerful solution. To help effectively implement it, we develop a more quantitative understanding of this type of mobility and the tools to facilitate this.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="transport-mode-choice-1" class="slide level2">
 <h2>Transport mode choice</h2>
@@ -467,6 +497,19 @@
 </div>
 </div>
 </div>
+<aside class="notes">
+<p>Basically get us from this, or even this, to this and this.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="context" class="slide level2">
 <h2>Context</h2>
@@ -500,6 +543,22 @@
 </ul>
 </div>
 </div>
+<aside class="notes">
+<p>We have at CASA a model called QUANT that already implements a large scale SIM for other modes of transport (train, underground, bus, car), and this work was dedicated to developing this new mode for the global model. It’s ultimate aim is to provide a web based open source tool allowing to benchmark various transport infrastructure change on a country scale.</p>
+<p>With this, we embark on a journey to develop the right methods to get networks, perform routing and model commuting by AT.</p>
+<p>But first, let’s take a step back and consider the problem, let us divide it into 3 main part:</p>
+<p>The : network, routing, spatial interaction.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="network" class="slide level2">
 <h2>Network</h2>
@@ -513,12 +572,38 @@
 <p>One being the main reference for open source georeferenced information in the world, the other being the official data set of roads in the UK.</p>
 </div>
 </div>
-<p>|&gt; <img data-src="img/fig1.png" data-fig-align="center"></p>
+
+<img data-src="img/fig1.png" class="r-stretch quarto-figure-center"><aside class="notes">
+<p>We look at OpenStreetMap and ordnance survey data as primary sources. We can see that one (OS) is developed mainly for cars, while OSM seems richer and more diverse.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="network-cycling-and-walking" class="slide level2">
 <h2>Network: cycling and walking</h2>
 
-<img data-src="img/osmnxprofiles2.png" class="r-stretch quarto-figure-center"></section>
+<img data-src="img/osmnxprofiles2.png" class="r-stretch quarto-figure-center"><aside class="notes">
+<p>We build network profiles from OSM based on the road segment classifications using the osmnx python package. We observe however that, due to the classification types, the resulting network profiles might not give a truly realistic picture of the network. To counter that, we also keep a general network, removing only motorways since it is illegal to use them. We also use an example of a network where segments are additionally weighted based on the preference of certain modes to use them, provided by the dodgr package in R.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
 <section id="routing" class="slide level2">
 <h2>Routing</h2>
 <h3 id="centroids">Centroids</h3>
@@ -534,7 +619,20 @@
 </ul></li>
 </ul>
 
-<img data-src="img/cent2.png" class="r-stretch quarto-figure-center"></section>
+<img data-src="img/cent2.png" class="r-stretch quarto-figure-center"><aside class="notes">
+<p>The flow data is aggregated by MSOA level, so we need to define the actual locations from and to which we are routing. We use 3 different types of centroids, the most commonly used one being the geometric one. Next comes the network centroid, which is taken from a set of nodes that are inside urbanised areas, so it excludes parks, water bodies etc… The final one is what we called the commute centroids and the actually a pair pair of points, the population weighted centroid on the one hand and the workplace zone centroid, taken from the ons workplace tone definition of the ONS.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
 <section id="routing-1" class="slide level2">
 <h2>Routing</h2>
 <p>Comparing commonly used packages: <strong>tidygraph</strong> <span class="citation" data-cites="tidygraph">(<a href="#/references" role="doc-biblioref" onclick="">Pedersen 2023</a>)</span> and <strong>sf_networks <span class="citation" data-cites="sfnetworks">(<a href="#/references" role="doc-biblioref" onclick="">Meer et al. 2022</a>)</span></strong>, wrappers of <strong>igraph</strong> <span class="citation" data-cites="igraph">(<a href="#/references" role="doc-biblioref" onclick="">Csardi and Nepusz 2006</a>)</span>, <strong>dodgr</strong> <span class="citation" data-cites="dodgr2019">(<a href="#/references" role="doc-biblioref" onclick="">Padgham 2019</a>)</span><strong>, cppRouting <span class="citation" data-cites="cppRouting">(<a href="#/references" role="doc-biblioref" onclick="">Larmet 2022</a>)</span></strong>.</p>
@@ -544,11 +642,36 @@
 </div>
 
 <img data-src="img/routing_benchmarks.png" style="width:70.0%" class="r-stretch"><p>The <strong>cppRouting</strong> package is used to have a local, self-sufficient workflow, without compromising the performance.</p>
+<aside class="notes">
+<p>Our next step was to identify the possibility to do routing on a pretty large network, for different set of ODs, requiring a very efficient tool. By benchmarking various famous and common tools, we found one to be much more efficient than the others, the cppRouting package in R and used it for the rest of the work.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section>
 <section id="spatial-interaction-model" class="title-slide slide level1 center">
 <h1>Spatial interaction model</h1>
-
+<aside class="notes">
+<p>This brings us to the final step of our workflow, building the actual spatial interaction model.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="model" class="slide level2">
 <h2>Model</h2>
@@ -630,6 +753,22 @@ T_{ij}=A_i O_i B_j D_j exp(-\beta d_{ij})
 <h3 id="performance">Performance</h3>
 <p>Notably, it takes about 50 milliseconds for one model run on London’s <span class="math inline">\(983\times 983\)</span> OD matrix.</p>
 <p><code>glm</code> and dependent packages were running out of memory / taking very long. Further development can be done to provide a full set of functionalities around routing, and SIMs as one single R package that would be highly efficient.</p>
+<aside class="notes">
+<p>We create flow matrices using the commuting data by mode of transport from the 2011 census.</p>
+<p>We could not find a tool to do the doubly constrained spatial interaction model for the London area, so we developed it and published it on GitHub as a package called cppSIM, it currently does just that, but does it very efficiently. Hopefully on CRAN soon and I am happy to discuss the various functionalities that can further be developed in a SIM workflow.</p>
+<p>Notably it takes about 50 milliseconds to do a run for London.</p>
+<p>Other solutions did not complete the run.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="results" class="slide level2">
 <h2>Results</h2>
@@ -654,6 +793,20 @@ T_{ij}=A_i O_i B_j D_j exp(-\beta d_{ij})
 <li><p>Less impact on cycling, although regular networks outperform slightly the custom weighted ones.</p></li>
 <li><p>When combined, the best of both worlds seems to emerge, with high quality of fit, more homogeneous results across networks and the <em>commute</em> centroids being slightly better with full OSM and OS networks.</p></li>
 </ul>
+<aside class="notes">
+<p>Running this model on the various modes/network/centroid combinations discussed, gives us the following picture, when maximising quality of fit with respect to the distance exponent:</p>
+<p>We see different maximum values, with high similarity in the results for cycling than walking, highlighting the great sensitivity to the different distances used. Commute centroids appear to significantly increase the model fit for walking and less so for cycling. When combining the two modes into AT, we observe a kind of best of both worlds picture, where the results are more consistent between networks and centroids with a slightly better quality and stability when using commute centroids. A nice results given that they correspond more intuitively to the actual locations a population is trying to join on during commute.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="conclusion" class="slide level2">
 <h2>Conclusion</h2>
@@ -674,7 +827,7 @@ T_{ij}=A_i O_i B_j D_j exp(-\beta d_{ij})
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="img/at_arxiv_qr.png" style="width:35.0%"></p>
-<figcaption>Code repository</figcaption>
+<figcaption>Paper on arxive</figcaption>
 </figure>
 </div>
 </div><div class="column" style="width:50%;">
@@ -687,6 +840,21 @@ T_{ij}=A_i O_i B_j D_j exp(-\beta d_{ij})
 </div>
 </div>
 </div>
+<aside class="notes">
+<p>To conclude, we can say that the growing need for alternative transport models and the availability of high resolution network data can allow for a free and open source approach to such models with few scale limitations, we are currently scaling up this analysis to all of GB and it works pretty well and look forward to developing more tools around this topic and of course providing them open source and free.</p>
+<p>Links the paper on arxive and the package on GitHub in the qr codes.</p>
+<p>Thank you for your attention !</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section></section>
 <section>
 <section id="thank-you-for-your-attention" class="title-slide slide level1 center">

@@ -18,6 +18,14 @@ logo: img/casa.png
 bibliography: references.bib
 ---
 
+## 
+
+::: {.notes}
+Hello and thank you for having me today at FOSS4G. 
+My name is Ivann and I will be talking about spatial interaction models for active travel commuting, with an open source and reproducible approach. I have been doing this work at the centre for advanced spatial analysis for almost a year and we expect to publish a paper soon, and today I will cover the software related parts of it. 
+
+:::
+
 ## Transport mode choice
 
 The use of a personal vehicle remains a dominant mode of transport even in cities. The urban environment has been extensively developed with vehicle use in mind. But this is changing in light of research indicating the negative impact that cars have on cities and their inhabitants. To name a few, noise and particle pollution, congestion, requirement for large parking areas, collision danger [@hidalgoTrillionDollarStreets2020; @fleuryGeospatialAnalysisIndividualbased2021; @Saunders2013].
@@ -37,6 +45,14 @@ Policy D1 London's form, character and capacity for growth
 :   Area assessments should cover the elements ... 4) Existing and planned transport networks (particularly walking & cycling networks) and public transportation connectivity.
 
 Cities mentioning AT as a priority in their mobility strategy are spread around the world: [Chicago](https://www.chicago.gov/content/dam/city/depts/cdot/CDOT%20Projects/Strategic_Plan/Strategic_Plan_for_Transportation21.pdf), [New York](https://www.nyc.gov/site/planning/planning-level/transportation/transportation-overview.page), [Singapour](https://www.ura.gov.sg/Corporate/Planning/Master-Plan/Themes/Convenient-and-Sustainable-Mobility), [Paris](https://www.apc-paris.com/plan-climat/mobilite) and more...
+
+::: {.notes}
+
+The general context is that we are observing a general shift in priority when it comes to mobility. The research of the last few decades has revealed the negative effects that cars have on cities, such as noise & particle pollution, congestion, use of for large parking space. 
+
+To all these problems, active travel represents a simple, cheap, yet very powerful solution. To help effectively implement it, we develop a more quantitative understanding of this type of mobility and the tools to facilitate this. 
+
+:::
 
 ## Transport mode choice
 
@@ -61,6 +77,13 @@ Photo by <a href="https://unsplash.com/fr/@archduk3?utm_source=unsplash&utm_medi
 :::
 :::
 :::
+
+::: {.notes}
+
+Basically get us from this, or even this, to this and this. 
+
+:::
+
 
 ## Context
 
@@ -101,6 +124,20 @@ Spatial interaction
 :::
 :::
 
+
+::: {.notes}
+
+We have at CASA a model called QUANT that already implements a large scale SIM for other modes of transport (train, underground, bus, car), and this work was dedicated to developing this new mode for the global model. It’s ultimate aim is to provide a web based open source tool allowing to benchmark various transport infrastructure change on a country scale.
+
+With this, we embark on a journey to develop the right methods to get networks, perform routing and model commuting by AT.
+
+But first, let's take a step back and consider the problem, let us divide it into 3 main part:
+
+The : network, routing, spatial interaction. 
+
+:::
+
+
 ## Network
 
 ::: columns
@@ -114,11 +151,24 @@ One being the main reference for open source georeferenced information in the wo
 :::
 :::
 
-\|\> ![](img/fig1.png){fig-align="center"}
+![](img/fig1.png){fig-align="center"}
+
+::: {.notes}
+
+We look at OpenStreetMap and ordnance survey data as primary sources. We can see that one (OS) is developed mainly for cars, while OSM seems richer and more diverse. 
+
+:::
 
 ## Network: cycling and walking
 
 ![](img/osmnxprofiles2.png){fig-align="center"}
+
+::: {.notes}
+
+We build network profiles from OSM based on the road segment classifications using the osmnx python package. We observe however that, due to the classification types, the resulting network profiles might not give a truly realistic picture of the network. To counter that, we also keep a general network, removing only motorways since it is illegal to use them.
+We also use an example of a network where segments are additionally weighted based on the preference of certain modes to use them, provided by the dodgr package in R. 
+
+:::
 
 ## Routing
 
@@ -131,6 +181,15 @@ One being the main reference for open source georeferenced information in the wo
     -   population weighted to workplace zone
 
 ![](img/cent2.png){fig-align="center"}
+
+
+::: {.notes}
+
+The flow data is aggregated by MSOA level, so we need to define the actual locations from and to which we are routing. We use 3 different types of centroids, the most commonly used one being the geometric one. Next comes the network centroid, which is taken from a set of nodes that are inside urbanised areas, so it excludes parks, water bodies etc… The final one is what we called the commute centroids and the actually a pair pair of points, the population weighted centroid on the one hand and the workplace zone centroid, taken from the ons workplace tone definition of the ONS.
+
+:::
+
+
 
 ## Routing
 
@@ -147,7 +206,22 @@ routing_benchmark <- microbenchmark::microbenchmark(...)
 
 The **cppRouting** package is used to have a local, self-sufficient workflow, without compromising the performance.
 
+::: {.notes}
+
+Our next step was to identify the possibility to do routing on a pretty large network, for different set of ODs, requiring a very efficient tool. By benchmarking various famous and common tools, we found one to be much more efficient than the others, the cppRouting package in R and used it for the rest of the work. 
+
+:::
+
+
+
 # Spatial interaction model
+
+::: {.notes}
+
+This brings us to the final step of our workflow, building the actual spatial interaction model.
+
+:::
+
 
 ## Model
 
@@ -207,6 +281,22 @@ Notably, it takes about 50 milliseconds for one model run on London's $983\times
 
 `glm` and dependent packages were running out of memory / taking very long. Further development can be done to provide a full set of functionalities around routing, and SIMs as one single R package that would be highly efficient.
 
+
+::: {.notes}
+
+We create flow matrices using the commuting data by mode of transport from the 2011 census.
+
+We could not find a tool to do the doubly constrained spatial interaction model for the London area, so we developed it and published it on GitHub as a package called cppSIM, it currently does just that, but does it very efficiently. Hopefully on CRAN soon and I am happy to discuss the various functionalities that can further be developed in a SIM workflow. 
+
+Notably it takes about 50 milliseconds to do a run for London. 
+
+Other solutions did not complete the run. 
+
+
+:::
+
+
+
 ## Results
 
 ::: {layout="[30,40,30]" layout-valign="top"}
@@ -224,6 +314,16 @@ Notably, it takes about 50 milliseconds for one model run on London's $983\times
 -   Less impact on cycling, although regular networks outperform slightly the custom weighted ones.
 
 -   When combined, the best of both worlds seems to emerge, with high quality of fit, more homogeneous results across networks and the *commute* centroids being slightly better with full OSM and OS networks.
+
+::: {.notes}
+
+Running this model on the various modes/network/centroid combinations discussed, gives us the following picture, when maximising quality of fit with respect to the distance exponent: 
+
+We see different maximum values, with high similarity in the results for cycling than walking, highlighting the great sensitivity to the different distances used. Commute centroids appear to significantly increase the model fit for walking and less so for cycling. When combining the two modes into AT, we observe a kind of best of both worlds picture, where the results are more consistent between networks and centroids with a slightly better quality and stability when using commute centroids. A nice results given that they correspond more intuitively to the actual locations a population is trying to join on during commute. 
+
+:::
+
+
 
 ## Conclusion
 
@@ -244,7 +344,7 @@ Notably, it takes about 50 milliseconds for one model run on London's $983\times
 
 Active-travel modelling: a methodological approach to networks for walking and cycling commuting analysis
 
-![Code repository](img/at_arxiv_qr.png){width="35%"}
+![Paper on arxive](img/at_arxiv_qr.png){width="35%"}
 :::
 
 ::: {.column width="50%"}
@@ -256,6 +356,17 @@ Active-travel modelling: a methodological approach to networks for walking and c
 :::
 
 :::
+
+::: {.notes}
+
+To conclude, we can say that the growing need for alternative transport models and the availability of high resolution network data can allow for a free and open source approach to such models with few scale limitations, we are currently scaling up this analysis to all of GB and it works pretty well and look forward to developing more tools around this topic and of course providing them open source and free. 
+
+Links the paper on arxive and the package on GitHub in the qr codes. 
+
+Thank you for your attention !
+
+:::
+
 
 # Thank you for your attention !
 
