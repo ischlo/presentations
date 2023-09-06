@@ -18,7 +18,26 @@ logo: img/casa.png
 bibliography: references.bib
 ---
 
-## Transport in cities
+## Transport mode choice
+The use of a personal vehicle remains a dominant mode of transport even in cities.
+The urban environment has been extensively developed with vehicle use in mind. 
+But this is changing in light of research indicating the negative impact that cars have on cities and their inhabitants. To name a few, noise and particle pollution, congestion, requirement for large parking areas, collision danger [@hidalgoTrillionDollarStreets2020; @fleuryGeospatialAnalysisIndividualbased2021; @Saunders2013].
+
+Active travel (AT) represents a simple yet powerful alternative to private vehicle use. A great amount of car trips on short distances could be made by AT.
+
+Contributing to this shift in priorities involves having accurate representation of walkable and cyclable networks. And a quantitative understanding of AT mobility. 
+
+Developing further models for predicting the use of such modes of transport is important for promoting the right change in the transport infrastructure.
+
+### The London Plan
+Puts active travel in the center of the discussion on redevelopment of local areas and transport connectivity.
+
+Policy D1 London's form, character and capacity for growth
+: Area assessments should cover the elements ... 4) Existing and planned transport networks (particularly walking & cycling networks) and public transportation connectivity.
+
+Cities mentioning AT as a priority in their mobility strategy are spread around the world: [Chicago](https://www.chicago.gov/content/dam/city/depts/cdot/CDOT%20Projects/Strategic_Plan/Strategic_Plan_for_Transportation21.pdf), [New York](https://www.nyc.gov/site/planning/planning-level/transportation/transportation-overview.page), [Singapour](https://www.ura.gov.sg/Corporate/Planning/Master-Plan/Themes/Convenient-and-Sustainable-Mobility), [Paris](https://www.apc-paris.com/plan-climat/mobilite) and more...
+
+## Transport mode choice
 
 ::: r-stack
 ![](img/gwagon.jpg){.fragment fig-align="center" width="50%"}
@@ -32,27 +51,30 @@ Photo by <a href="https://unsplash.com/fr/@archduk3?utm_source=unsplash&utm_medi
 :::
 
 ::: columns
+
 ::: {.column width="48%"}
+
 ![](img/sandals.jpeg){.fragment}
+
 :::
 
 ::: {.column width="48%"}
+
 ![](img/bicycle.jpg){.fragment}
+
 :::
+
 :::
+
 :::
 
-## Transport in cities
+## Context 
 
-The urban environment has been extensively developed with vehicle use in mind, but this is changing in light of research indicating the negative impact that cars have on cities and their inhabitants. To name a few, noise and particle pollution, requirement for large parking space, collision danger [@hidalgoTrillionDollarStreets2020; @fleuryGeospatialAnalysisIndividualbased2021; @Saunders2013].
+The [QUANT model](https://www.turing.ac.uk/research/research-projects/quantitative-urban-analytics-quant) for benchmarking transport or employment change from the point of view of sustainability and benefit for commuting journeys. A country scale SIM. Ultimately provide a user friendly, open source, highly efficient model capable of running country scale scenarios within seconds to the relevant actors.
 
-Active travel (AT) represents a simple yet powerful alternative to private vehicle use. A great amount of car trips on short distances could be made by AT.
+### Methodology
 
-Contributing to this shift in priorities involves having accurate representation of walkable and cyclable paths.
-
-Developing further models for predicting the use of such modes of transport is important for promoting the right change in the transport infrastructure.
-
-## Methodology
+The many open source tools out there aim at solving various aspects, combining them into one workflow that allows to build a full, self-sufficient model from scratch with ease of scalability, review some of the tools on the way and develop when missing appeared relevant.
 
 ### Network, Routing, Spatial interaction
 
