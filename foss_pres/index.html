@@ -538,9 +538,12 @@
 <h1>Spatial interaction model</h1>
 
 </section>
-<section id="doubly-constrained" class="slide level2">
-<h2>Doubly constrained</h2>
-<p>We use a doubly constrained spatial interaction model that we calibrate on the distance matrices (in km) and flow data from the 2011 census, using the foot and bike variables.</p>
+<section id="model" class="slide level2">
+<h2>Model</h2>
+<h3 id="flow-data">Flow data</h3>
+<p>Using the <a href="https://www.nomisweb.co.uk/census/2011/wu03EW"><code>wu03ew</code></a> table at MSOA level, we build flow matrices.</p>
+<div class="columns">
+<div class="column" style="width:75%;">
 <div class="cell">
 <div class="cell-output-display">
 <table>
@@ -575,8 +578,35 @@
 </table>
 </div>
 </div>
+</div><div class="column" style="width:25%;">
+<div class="cell">
+<div class="cell-output-display">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1337</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<h3 id="sim">SIM</h3>
+<p>We use a doubly constrained spatial interaction model that we calibrate on the distance matrices (in km) and flow data from the 2011 census, using the foot and bike variables.</p>
 <h3 id="package">Package</h3>
-<p>To perform the modelling step, a set of functions in R and C++ were developed as a package called <strong>cppSim</strong> and published on github and (hopefully) soon on CRAN.</p>
+<p>To perform the this step, a set of functions in R and C++ were developed as a package called <strong>cppSim</strong> and published on github and (hopefully) soon on CRAN.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>model <span class="ot">&lt;-</span> cppSim<span class="sc">::</span><span class="fu">run_model</span>(<span class="at">flows =</span> flow_matrix</span>
 <span id="cb2-2"><a href="#cb2-2"></a>                           ,<span class="at">distance =</span> distance_matrix</span>
@@ -584,7 +614,7 @@
 </div>
 <h3 id="performance">Performance</h3>
 <p>Notably, it takes about 50 milliseconds for one model run on London’s <span class="math inline">\(983\times 983\)</span> OD matrix.</p>
-<p><code>glm</code> and dependent packages were running out of memory / taking very long. Further development can be done to provide a full set of functionalities around routing, and SIMs as one single R package that would be highly efficient through a C++ back-end set of functions.</p>
+<p><code>glm</code> and dependent packages were running out of memory / taking very long. Further development can be done to provide a full set of functionalities around routing, and SIMs as one single R package that would be highly efficient.</p>
 </section>
 <section id="results" class="slide level2">
 <h2>Results</h2>

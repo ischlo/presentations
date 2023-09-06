@@ -133,10 +133,15 @@ The **cppRouting** package is used to have a local, self-sufficient workflow, wi
 
 # Spatial interaction model
 
-## Doubly constrained
+## Model
 
-We use a doubly constrained spatial interaction model that we calibrate on the distance matrices (in km) and flow data from the 2011 census, using the foot and bike variables.
+### Flow data
 
+Using the [`wu03ew`](https://www.nomisweb.co.uk/census/2011/wu03EW) table at MSOA level from the 2011 census, we build flow matrices.
+
+:::: columns
+
+::: {.column width=75%}
 ```{r}
 
 library(data.table)
@@ -151,9 +156,27 @@ knitr::kable(flows_raw[,.(`Area of residence`,`Area of workplace`,Bicycle,`On fo
 
 ```
 
+:::
+
+::: {.column width=25%}
+```{r}
+
+knitr::kable(flows_raw[,.(at=Bicycle+`On foot`)])
+
+```
+
+:::
+
+::::
+
+
+### SIM
+
+A doubly constrained spatial interaction model that is calibrated on the distance matrices (in km) and flow, using the foot and bike variables from the flows.
+
 ### Package
 
-To perform the modelling step, a set of functions in R and C++ were developed as a package called **cppSim** and published on github and (hopefully) soon on CRAN.
+To perform the this step, a set of functions in R and C++ were developed as a package called **cppSim** and published on github and (hopefully) soon on CRAN.
 
 ```{r, echo=TRUE, eval=FALSE}
 
@@ -167,7 +190,7 @@ model <- cppSim::run_model(flows = flow_matrix
 
 Notably, it takes about 50 milliseconds for one model run on London's $983\times 983$ OD matrix.
 
-`glm` and dependent packages were running out of memory / taking very long. Further development can be done to provide a full set of functionalities around routing, and SIMs as one single R package that would be highly efficient through a C++ back-end set of functions.
+`glm` and dependent packages were running out of memory / taking very long. Further development can be done to provide a full set of functionalities around routing, and SIMs as one single R package that would be highly efficient.
 
 ## Results
 
