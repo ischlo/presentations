@@ -93,7 +93,7 @@ The [QUANT model](https://www.turing.ac.uk/research/research-projects/quantitati
 
 The many open source tools out there aim at solving various aspects, combining them into one workflow that allows to build a full, self-sufficient model from scratch with ease of scalability, review some of the tools on the way and develop when missing appeared relevant.
 
-### Network, Routing, Spatial interaction
+### The 3 pillars
 
 In order to get a more comprehensive understanding of the various methods, data sources, existing software available, we experimented with workflows that would combine a testing process of the various steps involved.
 
