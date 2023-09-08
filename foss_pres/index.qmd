@@ -75,7 +75,9 @@ Photo by <a href="https://unsplash.com/fr/@archduk3?utm_source=unsplash&utm_medi
 ::: {.column width="48%"}
 ![](img/bicycle.jpg){.fragment}
 :::
+
 :::
+
 :::
 
 ::: {.notes}
@@ -153,6 +155,13 @@ One being the main reference for open source georeferenced information in the wo
 
 ![](img/fig1.png){fig-align="center"}
 
+::: footer
+
+Map by Valentina Maureira
+
+:::
+
+
 ::: {.notes}
 
 We look at OpenStreetMap and ordnance survey data as primary sources. We can see that one (OS) is developed mainly for cars, while OSM seems richer and more diverse. 
@@ -162,6 +171,13 @@ We look at OpenStreetMap and ordnance survey data as primary sources. We can see
 ## Network: cycling and walking
 
 ![](img/osmnxprofiles2.png){fig-align="center"}
+
+::: footer
+
+Map by Valentina Maureira
+
+:::
+
 
 ::: {.notes}
 
@@ -181,6 +197,13 @@ We also use an example of a network where segments are additionally weighted bas
     -   population weighted to workplace zone
 
 ![](img/cent2.png){fig-align="center"}
+
+::: footer
+
+Map by Valentina Maureira
+
+:::
+
 
 
 ::: {.notes}

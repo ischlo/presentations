@@ -516,7 +516,7 @@
 <p>The <a href="https://www.turing.ac.uk/research/research-projects/quantitative-urban-analytics-quant">QUANT model</a> <span class="citation" data-cites="QUANT">(<a href="#/references" role="doc-biblioref" onclick="">Batty and Milton 2021</a>)</span> for benchmarking transport or employment change from the point of view of sustainability and benefit for commuting journeys. A country scale SIM. Ultimately provide a user friendly, open source, highly efficient model capable of running country scale scenarios within seconds to the relevant actors.</p>
 <h3 id="methodology">Methodology</h3>
 <p>The many open source tools out there aim at solving various aspects, combining them into one workflow that allows to build a full, self-sufficient model from scratch with ease of scalability, review some of the tools on the way and develop when missing appeared relevant.</p>
-<h3 id="network-routing-spatial-interaction">Network, Routing, Spatial interaction</h3>
+<h3 id="the-3-pillars">The 3 pillars</h3>
 <p>In order to get a more comprehensive understanding of the various methods, data sources, existing software available, we experimented with workflows that would combine a testing process of the various steps involved.</p>
 <div class="columns">
 <div class="column" style="width:33%;">
@@ -573,7 +573,10 @@
 </div>
 </div>
 
-<img data-src="img/fig1.png" class="r-stretch quarto-figure-center"><aside class="notes">
+<img data-src="img/fig1.png" class="r-stretch quarto-figure-center"><div class="footer">
+<p>Map by Valentina Maureira</p>
+</div>
+<aside class="notes">
 <p>We look at OpenStreetMap and ordnance survey data as primary sources. We can see that one (OS) is developed mainly for cars, while OSM seems richer and more diverse.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -590,7 +593,10 @@
 <section id="network-cycling-and-walking" class="slide level2">
 <h2>Network: cycling and walking</h2>
 
-<img data-src="img/osmnxprofiles2.png" class="r-stretch quarto-figure-center"><aside class="notes">
+<img data-src="img/osmnxprofiles2.png" class="r-stretch quarto-figure-center"><div class="footer">
+<p>Map by Valentina Maureira</p>
+</div>
+<aside class="notes">
 <p>We build network profiles from OSM based on the road segment classifications using the osmnx python package. We observe however that, due to the classification types, the resulting network profiles might not give a truly realistic picture of the network. To counter that, we also keep a general network, removing only motorways since it is illegal to use them. We also use an example of a network where segments are additionally weighted based on the preference of certain modes to use them, provided by the dodgr package in R.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -619,7 +625,10 @@
 </ul></li>
 </ul>
 
-<img data-src="img/cent2.png" class="r-stretch quarto-figure-center"><aside class="notes">
+<img data-src="img/cent2.png" class="r-stretch quarto-figure-center"><div class="footer">
+<p>Map by Valentina Maureira</p>
+</div>
+<aside class="notes">
 <p>The flow data is aggregated by MSOA level, so we need to define the actual locations from and to which we are routing. We use 3 different types of centroids, the most commonly used one being the geometric one. Next comes the network centroid, which is taken from a set of nodes that are inside urbanised areas, so it excludes parks, water bodies etc… The final one is what we called the commute centroids and the actually a pair pair of points, the population weighted centroid on the one hand and the workplace zone centroid, taken from the ons workplace tone definition of the ONS.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
