@@ -3,6 +3,7 @@
 
 #### Repository to hold presentations
 
-- 07/09/2023:
-  [FOSS:4G](https://ischlo.github.io/presentations/foss_pres)
-  <!-- -   [Overture roads workflow with duckdb](https://ischlo.github.io/presentations/overture_roads) -->
+- 07/09/2023: <a href="https://ischlo.github.io/presentations/foss_pres"
+  target="_blank">FOSS:4G</a>
+- <a href="https://ischlo.github.io/presentations/overture_roads"
+  target="_blank">Overture roads workflow with duckdb</a>
