@@ -1,0 +1,236 @@
+---
+title: "Global spatial indexes"
+execute:
+  echo: true
+  eval: true
+  include: true
+ipynb-shell-interactivity: all
+keep-ipynb: true
+format:
+  revealjs:
+    theme: [pres_style.scss,default]
+    fig-align: center
+    code-fold: false
+author:
+  - name: Ivann Schlosser
+    email: ivann.schlosser@ouce.ox.co.uk
+    url: ischlosser.com
+    affiliations:
+      - name: Oxford Progamme for Sustainable Infrastructure Systems (OPSIS)
+        address: South Parks Road
+        postal-code: OX1 3QY
+        city: Oxford
+bibliography: references.bib
+---
+
+```{r echo=FALSE}
+
+# reticulate::use_python("/Users/ivannschlosser/micromamba/envs/spatial_index/bin/python")
+reticulate::use_condaenv(condaenv = "/Users/ivannschlosser/micromamba/envs/spatial_index")
+
+# https://h3geo.org/docs/highlights/flowmodel
+# 
+# https://github.com/uber/h3-py-notebooks/tree/master 
+# 
+# https://pro.arcgis.com/en/pro-app/latest/help/data/geodatabases/overview/an-overview-of-spatial-indexes-in-the-geodatabase.htm 
+# 
+# https://www.crunchydata.com/blog/the-many-spatial-indexes-of-postgis
+# 
+# https://www.cockroachlabs.com/docs/stable/spatial-indexes 
+# 
+# https://gee-community-catalog.org/projects/cisi/
+# 
+# http://s2geometry.io
+# 
+# https://docs.placekey.io/documentation
+
+```
+
+## Intro slide
+
+#### What are we talking about ?
+
+> Geospatial indexes: discrete global grid systems consisting of a multi-precision tiling of the sphere (plane) with hierarchical indexes.
+
+### Wide and evolving topic
+
+This presentation will cover the main spatial indexes that are out there. Usage of one of them could potentially increase efficiency of workflows, especially when working with multiple layers of large (global) data sets from different sources and at various resolutions. Standardizing the data layers other a single index can have a positive impact when sharing data sets included in the various packages. Spatial data is a lot faster to query and analyse when properly indexed, potentially allowing for great performance gains on the server and client sides of APIs.
+
+### Context
+
+While data base systems rely usually on a set of slightly different indexing techniques that adapt to the data provided, such as [B-Trees](https://en.wikipedia.org/wiki/B%2B_tree), [R-Trees](https://en.wikipedia.org/wiki/R-tree) and their many derivatives, there has been a strong significant development of tools that are more adapted for a general purpose data science workflow, providing a predefined (in-memory) subdivision system that can serve as a basis from which any other spatial data set can be expressed. On top of allowing very efficient querying and analysis, it also constitutes a form of representation of the data. This document reviews some of the most famous and widely adopted ones.
+
+## HTM
+
+::: columns
+::: {.column width="60%"}
+> Formalised in @szalayIndexingSphereHierarchical2007
+:::
+
+::: {.column width="40%"}
+![HTM grid levels 0 to 5](imgs/htm_grid.png){fig-align="center"}
+:::
+:::
+
+::: aside
+source: <https://arxiv.org/pdf/cs/0701164>
+:::
+
+## Geohash
+
+::: columns
+::: {.column width="60%"}
+> Developed by [Gustavo Niemeyer](https://web.archive.org/web/20080305223755/http://blog.labix.org/#post-85), 2008
+
+-   de facto standard on many systems (postGIS)
+
+-   open-source
+
+-   OpenStreetMap shortlink predecessor
+
+-   space-filling Morton curve along which indexation happens
+:::
+
+::: {.column width="40%"}
+![Grid example with Morton curve](imgs/MortonCurve.png){fig-align="center"}
+:::
+:::
+
+## Geohash
+
+### More material
+
+-   [GeoHash](https://www.movable-type.co.uk/scripts/geohash.html)
+
+### Similar systems
+
+-   [QuadTiles](https://wiki.openstreetmap.org/wiki/QuadTiles)
+
+-   [what3words](https://what3words.com/dance.cave.trend)
+
+## S2
+
+::: columns
+::: {.column width="60%"}
+> Developed by Google
+
+-   original library in C++/Java
+
+-   open source
+
+-   bindings to many other languages/systems
+
+-   each cell is a quadrilateral bounded by four geodesics, see @fig-grid
+
+    -   in other words, a square on a sphere
+
+-   levels from 0 to 30
+
+    -   Every $cm^2$ on Earth can be represented using a 64-bit integer
+
+-   cells are ordered sequentially along a space filling curve, see @fig-space_fillig
+:::
+
+::: {.column width="40%"}
+
+[![Grid cells](imgs/s2hierarchy.gif){#fig-grid fig-align="center" width="100%"}](http://s2geometry.io/devguide/s2cell_hierarchy)
+
+![Space filling curve](imgs/hilbert-figure.gif){#fig-space_fillig fig-align="center"}
+:::
+:::
+
+::: aside
+source: <http://s2geometry.io/devguide/s2cell_hierarchy>
+:::
+
+## S2
+
+### More material
+
+-   [S2](http://s2geometry.io)
+
+-   [S2 presentation](https://docs.google.com/presentation/d/1Hl4KapfAENAOf4gv-pSngKwvS_jwNVHRPZTTDzXXn6Q/edit#slide=id.i28)
+
+## H3
+
+::: columns
+::: {.column width="60%"}
+> Developped by Uber
+
+-   original library in C
+-   open-source
+-   bindings to many other languages/systems
+-   hexagonal shapes
+-   hierarchical (see @fig-h3_hier)
+-   Theory: [@sahrCentralPlaceIndexing2014]
+:::
+
+::: {.column width="40%"}
+![H3 levels](imgs/parent-child.png){#fig-h3_hier .lightbox fig-align="center" width="100%"}
+:::
+:::
+
+::: aside
+source: <https://h3geo.org/docs/highlights/indexing>
+:::
+
+## H3
+
+-   edge indexation (useful to model flows for example), nearest neighbours
+
+-   node indexation
+
+-   the nature of the projection imposes that a constant number of 12 pentagons is present in the index at each level.
+
+### More material
+
+-   interactive [visualisation](https://observablehq.com/@nrabinowitz/h3-index-inspector?collection=@nrabinowitz/h3)
+
+-   more online [materials](https://observablehq.com/collection/@nrabinowitz/h3-tutorial)
+
+-   [H3](https://h3geo.org)
+
+### Similar systems
+
+-   [Placekey](https://www.placekey.io): built on top of H3 with additional information on the type of feature being encoded, relevant for infrastructure mapping for example.
+
+## More online material
+
+-   [Carto](https://docs.carto.com/data-and-analysis/analytics-toolbox-for-bigquery/key-concepts/spatial-indexes)
+-   [Carto Academy](https://academy.carto.com/working-with-geospatial-data/introduction-to-spatial-indexes)
+-   [Bing Maps Tile System](https://learn.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system)
+
+### Others 
+
+Mainly legacy ones
+
+-   [healpix](http://healpix.jpl.nasa.gov)
+
+-   [COBE](http://lambda.gsfc.nasa.gov/product/cobe/skymap_info_new.cfm)
+
+# Application
+
+## Example H3
+
+> Find all the amenities that are located along a specific type of roads in Tanzania.
+
+We pick a convenient grid resolution, for example level `py h3_level=8`.
+
+To get the data, follow the process explained in [this doc](https://ischlo.github.io/presentations/overture_roads/#/title-slide), for example.
+
+```{python}
+
+import duckdb as db
+import geopandas as gpd
+from matplotlib import pyplot as plt
+
+# print("Hello World")
+
+# roads = db.read_parquet("/Users/ivannschlosser/Documents/oxford/roads_africa/tanzania_roads.geoparquet")
+
+# read in the pois, the roads of interest and points on the hex grid with the duckdb extension, find the overlapping hex cells 
+# .....
+
+```
+
+## References
