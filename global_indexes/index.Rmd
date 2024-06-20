@@ -132,7 +132,6 @@ source: <https://arxiv.org/pdf/cs/0701164>
 :::
 
 ::: {.column width="40%"}
-
 [![Grid cells](imgs/s2hierarchy.gif){#fig-grid fig-align="center" width="100%"}](http://s2geometry.io/devguide/s2cell_hierarchy)
 
 ![Space filling curve](imgs/hilbert-figure.gif){#fig-space_fillig fig-align="center"}
@@ -200,7 +199,7 @@ source: <https://h3geo.org/docs/highlights/indexing>
 -   [Carto Academy](https://academy.carto.com/working-with-geospatial-data/introduction-to-spatial-indexes)
 -   [Bing Maps Tile System](https://learn.microsoft.com/en-us/bingmaps/articles/bing-maps-tile-system)
 
-### Others 
+### Others
 
 Mainly legacy ones
 
