@@ -340,9 +340,11 @@ import pydeck as pdk
 
 ## Mapping
 
-```{r eval=TRUE,include=TRUE}
+```{r eval=TRUE,include=TRUE,fig.align='center',out.width="100%"}
 
-htmltools::includeHTML("support/h3_pois_roads_layer.html")
+# htmltools::includeHTML("support/h3_pois_roads_layer.html")
+
+knitr::include_url("support/h3_pois_roads_layer.html",height = "600px")
 
 ```
 
