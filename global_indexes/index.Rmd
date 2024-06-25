@@ -297,7 +297,6 @@ Computing cells along shortest paths between nodes (approximating all the edges)
 
 ```{python}
 #| echo: true
-
 # get the list of h3 indexes for a linestring and return the full set of hex codes it touches
 def path_from_h3(h3_list):
     return flatten(map(h3.grid_path_cells,h3_list[:-1],h3_list[1:]))
