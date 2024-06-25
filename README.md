@@ -10,5 +10,4 @@
 - <a href="https://ischlo.github.io/presentations/overture_roads"
   target="_blank">Overture roads workflow with duckdb</a>
 - <a href="https://ischlo.github.io/presentations/global_indexes"
-  target="_blank">Global Spatial Indexes review and applications</a>\[WORK
-  IN PROGRESS\]
+  target="_blank">Global Spatial Indexes review and applications</a>

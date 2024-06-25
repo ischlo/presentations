@@ -1,8 +1,8 @@
 ---
 title: "Global spatial indexes"
 execute:
-  echo: true
-  eval: true
+  echo: false
+  eval: false
   include: true
 ipynb-shell-interactivity: all
 keep-ipynb: true
@@ -25,8 +25,9 @@ bibliography: references.bib
 
 ```{r echo=FALSE}
 
-# reticulate::use_python("/Users/ivannschlosser/micromamba/envs/spatial_index/bin/python")
-reticulate::use_condaenv(condaenv = "/Users/ivannschlosser/micromamba/envs/spatial_index")
+reticulate::use_python("/Users/cenv1069/micromamba/envs/overture-dl/bin/python")
+
+# reticulate::use_condaenv(condaenv = "/Users/ivannschlosser/micromamba/envs/overture-dl")
 
 # https://h3geo.org/docs/highlights/flowmodel
 # 
@@ -211,24 +212,137 @@ Mainly legacy ones
 
 ## Example H3
 
-> Find all the amenities that are located along a specific type of roads in Tanzania.
+> Find all the locations of amenities along roads in a part of Tanzania.
 
 We pick a convenient grid resolution, for example level `py h3_level=8`.
 
 To get the data, follow the process explained in [this doc](https://ischlo.github.io/presentations/overture_roads/#/title-slide), for example.
 
 ```{python}
-
+#| echo: true
 import duckdb as db
 import geopandas as gpd
-from matplotlib import pyplot as plt
+import h3
 
-# print("Hello World")
+# pois
+pois = gpd.read_parquet("tanzania_pois.geoparquet")
 
-# roads = db.read_parquet("/Users/ivannschlosser/Documents/oxford/roads_africa/tanzania_roads.geoparquet")
+# roads
+roads = gpd.read_parquet("tanzania_roads.geoparquet")
+```
 
-# read in the pois, the roads of interest and points on the hex grid with the duckdb extension, find the overlapping hex cells 
-# .....
+#### Pick a resolution
+
+```{python}
+#| echo: true
+# h3 resolution
+res=8
+
+```
+
+## Projecting on the H3 grid
+
+```{python}
+# extracting the main class as a column
+pois["mclass"]=pois["categories"].apply(lambda x: x.get("main") if x else None)
+
+# getting the bbox of each geometry for faster queries. this is a dict variable of the parquet file.
+
+roads["xmin"]=roads.bbox.apply(lambda x: x["xmin"])
+roads["xmax"]=roads.bbox.apply(lambda x: x["xmax"])
+roads["ymin"]=roads.bbox.apply(lambda x: x["ymin"])
+roads["ymax"]=roads.bbox.apply(lambda x: x["ymax"])
+
+# roads[["xmin","ymin","xmax","ymax"]].head()
+
+# bboxes of choice
+# xmin,ymin,xmax,ymax
+bbox = [37.996,-7.303,39.628,-5.676]
+bbox_songea = [34.827,-11.346,36.458,-9.720]
+
+# functino for quick filtering of roads
+def filter_roads(roads,bbox):
+    # roads
+    return roads.query(f"xmin>{bbox[0]} and xmax<{bbox[2]} and ymin>{bbox[1]} and ymax<{bbox[3]}")
+
+# filtering roads 
+roads_bb = filter_roads(roads=roads
+                        ,bbox=bbox_songea)
+
+print(roads_bb.shape)
+```
+
+- The idea is to map things to the H3 grid, to then express them as sets of h3 cells.
+- The nature of the index should significantly speed up computations when doing all sorts of geometric operations
+
+Getting the h3 index of all the road nodes:
+
+```{python}
+#| echo: true
+coords = roads_bb.get_coordinates()
+
+coords_h3 = coords.apply(lambda row: h3.latlng_to_cell(row[1],row[0],res), axis=1)
+
+```
+
+### Filling the gaps
+
+```{python}
+def flatten(xss):
+    return [x for xs in xss for x in xs if len(xs)>=2]
+
+```
+
+Computing cells along shortest paths between nodes (approximating all the edges)
+
+```{python}
+#| echo: true
+
+# get the list of h3 indexes for a linestring and return the full set of hex codes it touches
+def path_from_h3(h3_list):
+    return flatten(map(h3.grid_path_cells,h3_list[:-1],h3_list[1:]))
+
+h3_paths = coords_h3.groupby(level=0).apply(lambda x: path_from_h3(x))
+
+```
+
+```{python}
+h3_road = pd.Series(flatten(h3_paths)).unique()
+h3_road
+
+# %%
+roads_cells = pd.Series(h3_road,name="hex").reset_index()
+roads_cells
+
+# %%
+radius = math.sqrt(h3.cell_area(roads_cells["hex"][0],unit="m^2"))
+print(f"Typical ditance in cell: {radius:.0f} meters")
+
+# %%
+# Preparing the data before plotting
+bounds = pois.geometry.total_bounds
+##
+lon_center = float((bounds[0]+bounds[2])/2)
+lat_center = float((bounds[1]+bounds[3])/2)
+
+# %%
+roads_cells[["hex","index"]].head(3)
+
+```
+
+We can now pass this to a *deck.gl* map with the `pydeck` package.
+
+```{python}
+
+import pydeck as pdk
+
+```
+
+## Mapping
+
+```{r eval=TRUE,include=TRUE}
+
+htmltools::includeHTML("support/h3_pois_roads_layer.html")
 
 ```
 
