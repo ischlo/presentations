@@ -307,8 +307,6 @@ par(mfrow=c(1,1))
 
 ```
 
-
-
 ## Data tranformation
 
 ### Renormalisation approach
@@ -329,12 +327,9 @@ Consists in updating the finer scale values from a known distribution at the giv
 
 ::: columns
 ::: {.column width="50%"}
-
 $$
 W(H_i) = \sum_{j=0..6}w(h_{ij})
-$$
-It adds up.
-
+$$ It adds up.
 :::
 
 ::: {.column width="50%"}
@@ -350,12 +345,11 @@ $$ such that $\sum_j g_W(h_{ij}) = 1$ is a density distribution associated to th
 ::: {.column width="50%"}
 $$
 W(H_i)= \frac{\sum_jv_{ij}}{\sum_jq_{ij}}
-$$ 
+$$
 
 using the associated extensive variables $v,q$.
 
 <!-- \sum_{j=0..6}g_w(h_{ij})w(h_{ij}) -->
-
 :::
 
 ::: {.column width="50%"}
@@ -365,11 +359,7 @@ $$
 
 in the trivial case. A more advanced approach would be to consider the associated extensive variables. If $W_{i}=\frac{V_{i}}{Q_{i}}$, then $w_{ij}=\frac{V_i g_{V}(h_{ij})}{Q_ig_Q(h_{ij})}$. Example: $GDP/cap$.
 :::
-
 :::
-
-
-
 
 ## In practice
 
@@ -427,7 +417,7 @@ A parent cell $H_i^{(n)}$ with resolution $n$ contains a set of children $\{h^{(
 
 python package: [dl4ds](https://carlos-gg.github.io/dl4ds/dl4ds.html)
 
-[![source : https://carlos-gg.github.io/dl4ds/dl4ds.html](img/dl4ds.png){fig-align="center" width="60%"}](https://carlos-gg.github.io/dl4ds/dl4ds.html)
+![source : https://carlos-gg.github.io/dl4ds/dl4ds.html](img/dl4ds.png){fig-align="center" width="60%"}
 
 ## Online material
 
@@ -445,4 +435,6 @@ python package: [dl4ds](https://carlos-gg.github.io/dl4ds/dl4ds.html)
 -   [`ClimDown`](https://github.com/pacificclimate/ClimDown)
 -   [LULCdown](https://github.com/ggiuliani/LULCdown?tab=readme-ov-file)
 -   [downscaleR](https://github.com/SantanderMetGroup/downscaleR)
--   [CDT](https://iri.columbia.edu/~rijaf/CDTUserGuide/html/cdt_file_menu.html) \## References
+-   [CDT](https://iri.columbia.edu/~rijaf/CDTUserGuide/html/cdt_file_menu.html)
+
+## References
