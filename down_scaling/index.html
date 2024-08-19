@@ -442,6 +442,16 @@ w(h_{ij}) = W(H_i)
 <div class="columns">
 <div class="column" style="width:50%;">
 <p>A parent cell <span class="math inline">\(H_i^{(n)}\)</span> with resolution <span class="math inline">\(n\)</span> contains a set of children <span class="math inline">\(\{h^{(n+1)}_{ij}\}_{j=0...6}\)</span> with resolution <span class="math inline">\(n+1\)</span>. A value <span class="math inline">\(W\)</span> <em>measured</em> at <span class="math inline">\(H_i^{(n)}\)</span>, <span class="math inline">\(W(H)\)</span> is downscaled into <span class="math inline">\(w(h)\)</span>.</p>
+<h3 id="trivial-case">Trivial case</h3>
+<p>For an extensive variable, if <span class="math inline">\(W(H^n_i)=21\)</span>, we can downscale into <span class="math display">\[w(h_{ij})=\frac{W(H^n_i)}{N_c}=\frac{21}{7}=3\]</span> for all j. If, we have a known underlying distribution at a finer scale, say <span class="math inline">\(g_W(h_{ij}) = 18/105\)</span> for <span class="math inline">\(j=\{0,1,4,5,6\}\)</span>, and <span class="math inline">\(g_W(h_{i2})=1/21,g_W(h_{i2})=2/21\)</span>, we incorporate this data into the equation and get:</p>
+<p><span class="math display">\[
+w(h_{ij})=g_W(h_{ij})W(H_i) =
+\begin{cases}
+    \frac{18}{105},&amp; \text{for } j=0,1,4,5,6 \\
+    \frac{5}{105},              &amp; \text{for } j=2\\
+    \frac{10}{105}, &amp; \text{for } j=3\\
+\end{cases}
+\]</span> for each children cell.</p>
 </div><div class="column" style="width:50%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>

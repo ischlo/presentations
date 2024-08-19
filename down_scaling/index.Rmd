@@ -366,6 +366,23 @@ in the trivial case. A more advanced approach would be to consider the associate
 ::: columns
 ::: {.column width="50%"}
 A parent cell $H_i^{(n)}$ with resolution $n$ contains a set of children $\{h^{(n+1)}_{ij}\}_{j=0...6}$ with resolution $n+1$. A value $W$ *measured* at $H_i^{(n)}$, $W(H)$ is downscaled into $w(h)$.
+
+### Trivial case
+
+For an extensive variable, if $W(H^n_i)=21$, we can downscale into 
+$$w(h_{ij})=\frac{W(H^n_i)}{N_c}=\frac{21}{7}=3$$
+for all j. If, we have a known underlying distribution at a finer scale, say $g_W(h_{ij}) = 18/105$ for $j=\{0,1,4,5,6\}$, and $g_W(h_{i2})=1/21,g_W(h_{i2})=2/21$, we incorporate this data into the equation and get:
+
+$$
+w(h_{ij})=g_W(h_{ij})W(H_i) = 
+\begin{cases}
+    \frac{18}{105},& \text{for } j=0,1,4,5,6 \\
+    \frac{5}{105},              & \text{for } j=2\\
+    \frac{10}{105}, & \text{for } j=3\\
+\end{cases}
+$$
+for each children cell.
+
 :::
 
 ::: {.column width="50%"}
@@ -436,7 +453,5 @@ python package: [dl4ds](https://carlos-gg.github.io/dl4ds/dl4ds.html)
 -   [LULCdown](https://github.com/ggiuliani/LULCdown?tab=readme-ov-file)
 -   [downscaleR](https://github.com/SantanderMetGroup/downscaleR)
 -   [CDT](https://iri.columbia.edu/~rijaf/CDTUserGuide/html/cdt_file_menu.html)
-
-
 
 ## References
