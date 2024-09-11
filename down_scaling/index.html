@@ -478,7 +478,7 @@ Figure&nbsp;1: H3 levels
 <section id="data-tranformation" class="slide level2">
 <h2>Data tranformation</h2>
 <h3 id="rescaling-approach">Rescaling approach</h3>
-<p>Consists in updating the finer scale values from a known distribution at the given resolution. Using the average in the trivial case. This method ensures that the scale change is mass preserving (pycnophylactic).</p>
+<p>Consists in updating the finer scale values from a known distribution at the given (lower) resolution. Using the average in the trivial case. This method ensures that the scale change is mass preserving (pycnophylactic).</p>
 <div class="columns">
 <div class="column" style="width:50%;">
 <h3 id="decreasing-resolution">Decreasing resolution</h3>
@@ -539,7 +539,7 @@ w(h_{ij})=g_W(h_{ij})W(H_i) =
 </section>
 <section id="in-practice-gdp-non-res-buildings-data" class="slide level2">
 <h2>In practice : GDP + Non-res buildings data</h2>
-<p>For a certain level (Admin0,Admin1), we know the GDP of an area (in USD) for given sectors. We know the amount of non-residential infrastructure in the region at a fine resolution (100x100m grid). We use assume a typical value of gdp generated for a unit a infrastructure and rescale to obtain a density layer of infrastrucure for the given area. Combine with the known ecnomic output at a coarser scale to downscale it.</p>
+<p>For a certain level (Admin0,Admin1), we know the GDP of an area (in USD$) for given sectors. We know the amount of non-residential infrastructure in the region at a fine resolution of 100x100m <span class="citation" data-cites="ghsldat2023">(<a href="#/references" role="doc-biblioref" onclick=""><em>GHSL data package 2023.</em> 2023</a>)</span>. We assume a typical value of <em>gdp</em> generated for a unit of infrastructure and rescale to obtain a density layer of infrastructure for the given area. Then combine it with the known economic output at a coarser scale to downscale it.</p>
 <div class="r-stack center">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -590,7 +590,7 @@ w(h_{ij})=g_W(h_{ij})W(H_i) =
 </section>
 <section id="in-practice-2-agriculture-yield-constraint-layer" class="slide level2">
 <h2>In Practice 2: Agriculture yield + constraint layer</h2>
-<p>We have a raster grid with agricultural yields from <strong>MAPSPAM</strong>. The raster grid cell size is <span class="math inline">\(10km\times 10km\)</span>. We can try to downscale this while taking into consideration the human settlements that are covered by the grid using the <strong>GHSL</strong> total built up ground surface. By removing the cells that are covered in infrastructure, we dowscale the agriculture layer by taking into consideration the constrain on where crops are more likely to be in fact cultivated.</p>
+<p>We have a raster grid with agricultural yields from <strong>MAPSPAM</strong><span class="citation" data-cites="spatiall">(<a href="#/references" role="doc-biblioref" onclick=""><span>“Spatially-Disaggregated Crop Production Statistics Data in Africa South of the Sahara for 2017,”</span> n.d.</a>)</span>. The raster grid cell size is <span class="math inline">\(10km\times 10km\)</span>. We can try to downscale this while taking into consideration the human settlements that are covered by the grid using the <strong>GHSL</strong> total built up ground surface. By removing the cells that are covered in infrastructure, we dowscale the agriculture layer by taking into consideration the constrain on where crops are more likely to be in fact cultivated.</p>
 <div class="r-stack center">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -723,6 +723,9 @@ Ekström, Marie, Michael R Grose, and Penny H Whetton. 2015. <span>“An Apprais
 <div id="ref-frías2006" class="csl-entry" role="listitem">
 Frías, M. D., E. Zorita, J. Fernández, and C. Rodríguez-Puebla. 2006. <span>“Testing Statistical Downscaling Methods in Simulated Climates.”</span> <em>Geophysical Research Letters</em> 33 (19): 2006GL027453. <a href="https://doi.org/10.1029/2006GL027453">https://doi.org/10.1029/2006GL027453</a>.
 </div>
+<div id="ref-ghsldat2023" class="csl-entry" role="listitem">
+<em>GHSL data package 2023.</em> 2023. LU: Publications Office. <a href="https://data.europa.eu/doi/10.2760/098587">https://data.europa.eu/doi/10.2760/098587</a>.
+</div>
 <div id="ref-giuliani2022" class="csl-entry" role="listitem">
 Giuliani, Gregory, Denisa Rodila, Nathan Külling, Ramona Maggini, and Anthony Lehmann. 2022. <span>“Downscaling Switzerland Land Use/Land Cover Data Using Nearest Neighbors and an Expert System.”</span> <em>Land</em> 11 (5): 615. <a href="https://doi.org/10.3390/land11050615">https://doi.org/10.3390/land11050615</a>.
 </div>
@@ -746,6 +749,9 @@ Sahr, Kevin M. 2014. <span>“Central Place Indexing: Optimal Location Represent
 </div>
 <div id="ref-schoof2013" class="csl-entry" role="listitem">
 Schoof, Justin T. 2013. <span>“Statistical Downscaling in Climatology.”</span> <em>Geography Compass</em> 7 (4): 249–65. <a href="https://doi.org/10.1111/gec3.12036">https://doi.org/10.1111/gec3.12036</a>.
+</div>
+<div id="ref-spatiall" class="csl-entry" role="listitem">
+<span>“Spatially-Disaggregated Crop Production Statistics Data in Africa South of the Sahara for 2017.”</span> n.d. <a href="https://doi.org/10.7910/DVN/FSSKBW">https://doi.org/10.7910/DVN/FSSKBW</a>.
 </div>
 <div id="ref-tobler1979" class="csl-entry" role="listitem">
 Tobler, Waldo R. 1979. <span>“Smooth Pycnophylactic Interpolation for Geographical Regions.”</span> <em>Journal of the American Statistical Association</em> 74 (367): 519–30. <a href="https://doi.org/10.1080/01621459.1979.10481647">https://doi.org/10.1080/01621459.1979.10481647</a>.
@@ -1193,7 +1199,7 @@ Wenz, Leonie, Robert Devon Carr, Noah Kögel, Maximilian Kotz, and Matthias Kalk
       }
     });
     </script>
-    <script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","descPosition":"bottom","selector":".lightbox","closeEffect":"zoom"});
+    <script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","selector":".lightbox","descPosition":"bottom","closeEffect":"zoom"});
     (function() {
       let previousOnload = window.onload;
       window.onload = () => {

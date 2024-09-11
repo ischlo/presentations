@@ -384,7 +384,7 @@ par(mfrow = c(1, 1))
 
 ### Rescaling approach
 
-Consists in updating the finer scale values from a known distribution at the given resolution. Using the average in the trivial case. This method ensures that the scale change is mass preserving (pycnophylactic).
+Consists in updating the finer scale values from a known distribution at the given (lower) resolution. Using the average in the trivial case. This method ensures that the scale change is mass preserving (pycnophylactic).
 
 ::::: columns
 ::: {.column width="50%"}
@@ -465,7 +465,7 @@ $$ for each children cell.
 
 ## In practice : GDP + Non-res buildings data
 
-For a certain level (Admin0,Admin1), we know the GDP of an area (in USD) for given sectors. We know the amount of non-residential infrastructure in the region at a fine resolution (100x100m grid). We use assume a typical value of gdp generated for a unit a infrastructure and rescale to obtain a density layer of infrastrucure for the given area. Combine with the known ecnomic output at a coarser scale to downscale it.
+For a certain level (Admin0,Admin1), we know the GDP of an area (in USD\$) for given sectors. We know the amount of non-residential infrastructure in the region at a fine resolution of 100x100m [@ghsldat2023]. We assume a typical value of *gdp* generated for a unit of infrastructure and rescale to obtain a density layer of infrastructure for the given area. Then combine it with the known economic output at a coarser scale to downscale it.
 
 ::: {.r-stack .center}
 ![](img/gridded_zoom.png){.fragment fig-align="center" width="70%"}
@@ -491,7 +491,7 @@ For a certain level (Admin0,Admin1), we know the GDP of an area (in USD) for giv
 
 ## In Practice 2: Agriculture yield + constraint layer
 
-We have a raster grid with agricultural yields from **MAPSPAM**. The raster grid cell size is $10km\times 10km$. We can try to downscale this while taking into consideration the human settlements that are covered by the grid using the **GHSL** total built up ground surface. By removing the cells that are covered in infrastructure, we dowscale the agriculture layer by taking into consideration the constrain on where crops are more likely to be in fact cultivated.
+We have a raster grid with agricultural yields from **MAPSPAM**[@spatiall]. The raster grid cell size is $10km\times 10km$. We can try to downscale this while taking into consideration the human settlements that are covered by the grid using the **GHSL** total built up ground surface. By removing the cells that are covered in infrastructure, we dowscale the agriculture layer by taking into consideration the constrain on where crops are more likely to be in fact cultivated.
 
 ::: {.r-stack .center}
 ![](img/grid_unconstrained_zoom.png){.fragment fig-align="center" width="70%"}
