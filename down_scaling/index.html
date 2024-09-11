@@ -7,11 +7,14 @@
 <link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
-<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="index_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="index_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.5.54">
 
   <meta name="author" content="Ivann Schlosser">
-  <title>Downscaling techniques</title>
+  <title>Interpolating global economic activity data</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -346,7 +349,8 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Downscaling techniques</h1>
+  <h1 class="title">Interpolating global economic activity data</h1>
+  <p class="subtitle">Preliminary results and methods</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -354,7 +358,7 @@
 <a href="ischlosser.com">Ivann Schlosser</a> 
 </div>
 <div class="quarto-title-author-email">
-<a href="mailto:ivann.schlosser@ox.co.uk">ivann.schlosser@ox.co.uk</a>
+<a href="mailto:ivann.schlosser@ouce.ox.ac.uk">ivann.schlosser@ouce.ox.ac.uk</a>
 </div>
         <p class="quarto-title-affiliation">
             Oxford Progamme for Sustainable Infrastructure Systems (OPSIS)
@@ -365,22 +369,95 @@
 </section>
 <section id="introduction" class="slide level2">
 <h2>Introduction</h2>
-<p>Down-scaling in order to increase the resolution of data on a grid/index/mesh. This usually comes at the cost of precision of the measure at the increased resolution, resulting from taking <em>averaged</em> values of the lower resolution that are given.</p>
+<h3 id="looking-at-economic-activity-at-the-finer-scale-than-what-the-current-data-allows">Looking at economic activity at the finer scale than what the current data allows</h3>
+<ul>
+<li><p>Wrangling of economic activity datasets (DOSE, <span class="citation" data-cites="wenz2023">Wenz et al. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>)</p></li>
+<li><p>Data projection on the H3 hierarchical indexed grid</p></li>
+<li><p>Developing the right assumptions about the nature of the observed variables</p></li>
+<li><p>Increasing the resolution under the assumptions, using high resolution proxy layers</p></li>
+<li><p>Implementation of a workflow covering this process: package <code>scale-nav</code></p></li>
+</ul>
 </section>
 <section id="vocabulary-note" class="slide level2">
 <h2>Vocabulary note</h2>
-<p><strong>Resolution</strong> - spatial precision of a value, can also be seen as an uncertainty, usually between 1 and some integer value (18 in the case of H3, 32 in the case of S2), a greater value corresponds to a finer resolution, in other words greater spatial precision, lower values are coarser resolution.</p>
+<p><strong>Resolution</strong> - spatial precision of a value, usually between 1 and some integer value (18 in the case of H3, 32 in the case of S2), a greater value corresponds to a finer resolution, in other words greater spatial precision, lower values are coarser resolution.</p>
 <p><strong>Cell size</strong> - the area of a grid cell, will usually depend on the resolution, a greater resolution means a smaller cell size, and inversely.</p>
 <p><strong>Cell radius/diameter</strong> - in the case of hexagonal cells, analogous to circle radius/diameter.</p>
 <p>ex: H3 grid at resolution 10, the cell diameter is about 200 meter.</p>
 <p><strong>Downscaling</strong> - increasing the spatial resolution, reducing the size of cells we work with.</p>
 <p><strong>Grid</strong> - set of cells at a specific resolution</p>
-<p>A value or distribution observed across an continuous area of interest can be projected onto a discrete grid, with a certain loss of information.</p>
-<p>A grid represents a discrete representation of an area of interest, which is generally continuous, therefore having a greater resolution (smaller cell sizes) leads to more accurate values in a finite element approximation.</p>
-<!-- Interpolation as a way to fill in the gaps, in which we then downscale -->
+<p>A value observed across a continuous area of interest can be projected onto a discrete grid, with a certain loss of information.</p>
+<!-- difference with rasters hierarchical grid vs normal one. -->
+<p>A grid represents a discrete representation of an area of interest, which is generally continuous, therefore having a greater resolution (smaller cell sizes) leads to more accurate values.</p>
+<p>Interpolation is a usefool technique to infer intermediate values.</p>
+<p>Downscaling, similarly to interpolation, allows infering values at a finer resolution than what is originally available in the data.</p>
+<p><strong>Hierarchical index</strong> - an index method that consistently covers various resultions.</p>
+<p><strong>Parent, children</strong> - relation between cells of a lower resolution and higher one that are contained.</p>
+<p>The hierarchical indexation captures both the spatial proximity of cells, and their relations across scales (the hierarchy).</p>
+<p><strong>pycnophylactic</strong> - mass preserving.</p>
 </section>
+<section id="input-data" class="slide level2">
+<h2>Input data</h2>
+<p>Using an <em>enhanced</em> DOSE data set, where a number of gaps have been filled with the World Development Indicator data on the national level.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-nrow="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="img/world_gdp.png"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="img/world_manuf.png"></p>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="img/world_agri.png"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="img/world_services.png"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="hierarchical-indexed-grids" class="slide level2">
+<h2>Hierarchical indexed grids</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<h3 id="h3">H3</h3>
+<blockquote>
+<p>Developped by Uber</p>
+</blockquote>
+<ul>
+<li>original library in C</li>
+<li>open-source</li>
+<li>bindings to many other languages/systems</li>
+<li>hexagonal shapes</li>
+<li>hierarchical (see <a href="#/hierarchical-indexed-grids" class="quarto-xref">Figure&nbsp;1</a>)</li>
+<li>Theory:<span class="citation" data-cites="sahr2014">(<a href="#/references" role="doc-biblioref" onclick="">Sahr 2014</a>)</span></li>
+<li>edge indexation (useful to model flows for example), nearest neighbours</li>
+<li>node indexation</li>
+<li>the nature of the projection imposes that a constant number of 12 pentagons is present in the index at each level.</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<div id="fig-h3_hier" class="lightbox quarto-float quarto-figure quarto-figure-center" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-h3_hier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/parent-child.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: H3 levels"><img data-src="img/parent-child.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-h3_hier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: H3 levels
+</figcaption>
+</figure>
+</div>
+</div></div>
+
+<aside><div>
+<p>source: <a href="https://h3geo.org/docs/highlights/indexing" class="uri">https://h3geo.org/docs/highlights/indexing</a></p>
+</div></aside></section>
 <section id="example-interpolation" class="slide level2">
-<h2>Example: Interpolation</h2>
+<h2>Example : Interpolation</h2>
 <!-- Downscaling a **sinus** function. -->
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-1-1.png" class="quarto-figure quarto-figure-center r-stretch" width="1500"></section>
@@ -397,13 +474,10 @@
 <!-- infering downscaled values from interpolated values. A way to do an 'educated' guess. -->
 <!-- In our case, use most granular data avilable as one of the inputs and proxies for the donscaling of other values -->
 <img data-src="index_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="1500"></section>
-<section id="binning-and-donwscaling" class="slide level2">
-<h2>Binning and donwscaling</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" width="1500"></section>
 <section id="data-tranformation" class="slide level2">
 <h2>Data tranformation</h2>
-<h3 id="renormalisation-approach">Renormalisation approach</h3>
+<h3 id="rescaling-approach">Rescaling approach</h3>
 <p>Consists in updating the finer scale values from a known distribution at the given resolution. Using the average in the trivial case. This method ensures that the scale change is mass preserving (pycnophylactic).</p>
 <div class="columns">
 <div class="column" style="width:50%;">
@@ -437,8 +511,8 @@ w(h_{ij}) = W(H_i)
 <p>in the trivial case. A more advanced approach would be to consider the associated extensive variables. If <span class="math inline">\(W_{i}=\frac{V_{i}}{Q_{i}}\)</span>, then <span class="math inline">\(w_{ij}=\frac{V_i g_{V}(h_{ij})}{Q_ig_Q(h_{ij})}\)</span>. Example: <span class="math inline">\(GDP/cap\)</span>.</p>
 </div></div>
 </section>
-<section id="in-practice" class="slide level2">
-<h2>In practice</h2>
+<section id="in-practice-simple-example" class="slide level2">
+<h2>In practice : simple example</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p>A parent cell <span class="math inline">\(H_i^{(n)}\)</span> with resolution <span class="math inline">\(n\)</span> contains a set of children <span class="math inline">\(\{h^{(n+1)}_{ij}\}_{j=0...6}\)</span> with resolution <span class="math inline">\(n+1\)</span>. A value <span class="math inline">\(W\)</span> <em>measured</em> at <span class="math inline">\(H_i^{(n)}\)</span>, <span class="math inline">\(W(H)\)</span> is downscaled into <span class="math inline">\(w(h)\)</span>.</p>
@@ -449,9 +523,9 @@ w(h_{ij}) = W(H_i)
 <p><span class="math display">\[
 w(h_{ij})=g_W(h_{ij})W(H_i) =
 \begin{cases}
-    \frac{18}{105},&amp; \text{for } j=0,1,4,5,6 \\
-    \frac{5}{105},              &amp; \text{for } j=2\\
-    \frac{10}{105}, &amp; \text{for } j=3\\
+    3.6,&amp; \text{for } j=0,1,4,5,6 \\
+    1,              &amp; \text{for } j=2\\
+    2, &amp; \text{for } j=3\\
 \end{cases}
 \]</span> for each children cell.</p>
 </div><div class="column" style="width:50%;">
@@ -462,6 +536,113 @@ w(h_{ij})=g_W(h_{ij})W(H_i) =
 </figure>
 </div>
 </div></div>
+</section>
+<section id="in-practice-gdp-non-res-buildings-data" class="slide level2">
+<h2>In practice : GDP + Non-res buildings data</h2>
+<p>For a certain level (Admin0,Admin1), we know the GDP of an area (in USD) for given sectors. We know the amount of non-residential infrastructure in the region at a fine resolution (100x100m grid). We use assume a typical value of gdp generated for a unit a infrastructure and rescale to obtain a density layer of infrastrucure for the given area. Combine with the known ecnomic output at a coarser scale to downscale it.</p>
+<div class="r-stack center">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/gridded_zoom.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/gridded_zoom-2.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/gridded_zoom-3.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/gridded_zoom-5.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</section>
+<section id="further" class="slide level2">
+<h2>Further</h2>
+<div class="r-stack center">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/gridded.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/gridded-2.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/gridded-3.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/gridded-4.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</section>
+<section id="in-practice-2-agriculture-yield-constraint-layer" class="slide level2">
+<h2>In Practice 2: Agriculture yield + constraint layer</h2>
+<p>We have a raster grid with agricultural yields from <strong>MAPSPAM</strong>. The raster grid cell size is <span class="math inline">\(10km\times 10km\)</span>. We can try to downscale this while taking into consideration the human settlements that are covered by the grid using the <strong>GHSL</strong> total built up ground surface. By removing the cells that are covered in infrastructure, we dowscale the agriculture layer by taking into consideration the constrain on where crops are more likely to be in fact cultivated.</p>
+<div class="r-stack center">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/grid_unconstrained_zoom.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/grid_constrained_zoom.png" class="fragment quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</section>
+<section id="two-directions" class="slide level2">
+<h2>Two directions</h2>
+<p>In any case, we rely on high resolution proxy/constrain layers and low resolution data layers.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="top-bottom">Top-bottom</h3>
+<p>From low resolution (parent cells) to high resolution (descendant cells)</p>
+<ul>
+<li>A low resolution data layer is downscaled into high resolution with the use of appropriate high resolution proxy layers.</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="bottom-up">Bottom-up</h3>
+<p>From high resolution (descendant cells) to lower resolution (parent cells)</p>
+<ul>
+<li>A high resolution proxy/constraint layer is upscaled to aggregate it at a lower resolution.</li>
+</ul>
+</div></div>
+</section>
+<section id="workflow" class="slide level2">
+<h2>Workflow</h2>
+
+<img data-src="img/flowchart.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"></section>
+<section id="conclusion" class="slide level2">
+<h2>Conclusion</h2>
+<h3 id="challenges">Challenges</h3>
+<p>Lots of challenges both on the conceptual understanding of what is going on and the right choice of base data layers, constraints etc…</p>
+<blockquote>
+<p>Question for the audience : good proxy and constraint data layers ?</p>
+</blockquote>
+<p>But also technical implementation as the number of cells grows exponentially with each level of downscaling and all the data sizes with it.</p>
+<blockquote>
+<p>Currently using duckDB with ibis and their geospatial extensions.</p>
+</blockquote>
+<h3 id="next-steps">Next steps</h3>
+<ul>
+<li>Robust workflows to project all sorts of spatial data onto the grid with the <em>pycnophylactic</em> principle.</li>
+</ul>
+<!-- what proxy to differentiate industry ... -->
+<!-- constraints ? -->
 </section>
 <section id="literature" class="slide level2">
 <h2>Literature</h2>
@@ -478,6 +659,10 @@ w(h_{ij})=g_W(h_{ij})W(H_i) =
 </figure>
 </div>
 </div></div>
+</section>
+<section id="online" class="slide level2">
+<h2>Online</h2>
+<h3 id="gap-filling-dose">Gap filling DOSE</h3>
 </section>
 <section id="literature-1" class="slide level2">
 <h2>Literature</h2>
@@ -517,6 +702,7 @@ w(h_{ij})=g_W(h_{ij})W(H_i) =
 <li><a href="https://github.com/ggiuliani/LULCdown?tab=readme-ov-file">LULCdown</a></li>
 <li><a href="https://github.com/SantanderMetGroup/downscaleR">downscaleR</a></li>
 <li><a href="https://iri.columbia.edu/~rijaf/CDTUserGuide/html/cdt_file_menu.html">CDT</a></li>
+<li><a href="https://isciences.gitlab.io/exactextractr/">exactextractr</a></li>
 </ul>
 </section>
 <section id="references" class="slide level2 smaller scrollable">
@@ -554,6 +740,9 @@ Murakami, Daisuke, and Yoshiki Yamagata. 2019. <span>“Estimation of Gridded Po
 <div id="ref-roudier2017" class="csl-entry" role="listitem">
 Roudier, P., B. P. Malone, C. B. Hedley, B. Minasny, and A. B. McBratney. 2017. <span>“Comparison of Regression Methods for Spatial Downscaling of Soil Organic Carbon Stocks Maps.”</span> <em>Computers and Electronics in Agriculture</em> 142: 91–100. <a href="https://doi.org/10.1016/j.compag.2017.08.021">https://doi.org/10.1016/j.compag.2017.08.021</a>.
 </div>
+<div id="ref-sahr2014" class="csl-entry" role="listitem">
+Sahr, Kevin M. 2014. <span>“Central Place Indexing: Optimal Location Representation for Digital Earth.”</span>
+</div>
 <div id="ref-schoof2013" class="csl-entry" role="listitem">
 Schoof, Justin T. 2013. <span>“Statistical Downscaling in Climatology.”</span> <em>Geography Compass</em> 7 (4): 249–65. <a href="https://doi.org/10.1111/gec3.12036">https://doi.org/10.1111/gec3.12036</a>.
 </div>
@@ -562,6 +751,9 @@ Tobler, Waldo R. 1979. <span>“Smooth Pycnophylactic Interpolation for Geograph
 </div>
 <div id="ref-vrac2007" class="csl-entry" role="listitem">
 Vrac, M., M. L. Stein, K. Hayhoe, and X.-Z. Liang. 2007. <span>“A General Method for Validating Statistical Downscaling Methods Under Future Climate Change.”</span> <em>Geophysical Research Letters</em> 34 (18): 2007GL030295. <a href="https://doi.org/10.1029/2007GL030295">https://doi.org/10.1029/2007GL030295</a>.
+</div>
+<div id="ref-wenz2023" class="csl-entry" role="listitem">
+Wenz, Leonie, Robert Devon Carr, Noah Kögel, Maximilian Kotz, and Matthias Kalkuhl. 2023. <span>“DOSE <span></span> Global Data Set of Reported Sub-National Economic Output.”</span> <em>Scientific Data</em> 10 (1): 425. <a href="https://doi.org/10.1038/s41597-023-02323-8">https://doi.org/10.1038/s41597-023-02323-8</a>.
 </div>
 </div>
 </section>
@@ -1000,6 +1192,38 @@ Vrac, M., M. L. Stein, K. Hayhoe, and X.-Z. Liang. 2007. <span>“A General Meth
       }
     });
     </script>
+    <script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom"});
+    (function() {
+      let previousOnload = window.onload;
+      window.onload = () => {
+        if (previousOnload) {
+          previousOnload();
+        }
+        lightboxQuarto.on('slide_before_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          const href = trigger.getAttribute('href');
+          if (href !== null) {
+            const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+            if (imgEl !== null) {
+              const srcAttr = imgEl.getAttribute("src");
+              if (srcAttr && srcAttr.startsWith("data:")) {
+                slideConfig.href = srcAttr;
+              }
+            }
+          } 
+        });
+      
+        lightboxQuarto.on('slide_after_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(slideNode);
+          }
+        });
+      
+      };
+      
+    })();
+              </script>
     
 
 </body></html>
