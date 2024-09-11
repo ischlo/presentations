@@ -561,7 +561,9 @@ But also technical implementation as the number of cells grows exponentially wit
 
 ## Online
 
-### Gap filling DOSE
+### Spatial economics data: [ischlo/global-econ-data](https://github.com/ischlo/global-econ-data)
+
+Repository with notebooks visualizing, cleaning and combining various data sets.
 
 ## Literature
 
