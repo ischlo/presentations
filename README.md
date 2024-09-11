@@ -12,4 +12,4 @@
 - <a href="https://ischlo.github.io/presentations/global_indexes"
   target="_blank">Global Spatial Indexes review and applications</a>
 - <a href="https://ischlo.github.io/presentations/down_scaling"
-  target="_blank">Downscaling with H3</a>
+  target="_blank">Interpolating global economic activity data</a>
