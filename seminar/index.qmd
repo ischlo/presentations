@@ -1,0 +1,383 @@
+---
+title: "Downscaling Global Economic Activity Data : A Spatial and Sectorial perspective using Bayesian Hierarchical Modelling"
+format: 
+    revealjs:
+        theme: ["./pres_style.scss",default]
+    # pdf : default
+    # beamer
+author:
+  - name: Ivann Schlosser
+    email: ivann.schlosser@ouce.ox.co.uk
+    url: ischlosser.com
+    affiliations:
+      - name: Oxford Progamme for Sustainable Infrastructure Systems (OPSIS)
+        address: South Parks Road
+        postal-code: OX1 3QY
+        city: Oxford
+# bibliography: references.bib
+---
+
+# Introduction
+
+## Glossary
+
+**BHM** - Bayesian Hierarchical Model
+
+**MCMC** - Markov Chain Monte Carlo
+
+**PDF** - probability density function
+
+**RV** - random variable
+ 
+**Marginal Probability** -  PDF expressing dependency on a single parameter
+
+**Pycnophilcatic** - mass preserving
+
+****
+
+## Where we left off
+
+- Pycnophylactic condition
+- Rescaling, using Overture POIs and their categories as source for density distribution of activity on the ground.
+
+### Pros
+
+- Simple
+- Efficient
+- Global
+
+### Cons
+
+- Did not use additional available information : sector level data, regional accounts from local sources, other global layers such as population, Non-Residential built infrastructure etc...
+- Univariate model
+- Hard constraint
+- No flexibility
+
+## Can we do better ?
+
+**YES**, but at a bigger cost.
+
+However, it allows us to answer all off the previous cons, while preserving the pros.
+
+The methodology was significantly expanded to use **Bayesian Hierarchical Modelling** (BHM).
+
+### Methods
+
+#### BHM
+
+As the name suggests, at the core of this method lies the familiar Bayes rule. 
+Let us remind ourselves. If we have two random variables (RV), and we are modelling them together, we might find ourselves asking questions of the nature :
+
+> What is the probability of a joint event, or a conditional event, having observed only the outcome of a single one ?
+
+## BHM
+
+This, in practice, takes the form $p(x,z)$. And in such cases, Bayes rule tells us that 
+
+::: {.columns layout="[[6,4]]"}
+
+::: {.column}
+
+$$
+p(x,z) = p(z) * p(x|z) \\
+p(x,z) = p(x) * p(z|x)
+$$
+
+We can also rewrite this to link both marginals with the joint one :
+$$
+p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
+$$
+
+:::
+::: {.column}
+
+![](imgs/venn.png)
+
+:::
+:::
+
+ <!-- "What is the probability of observing $x$, having already observed $z$ ?"
+ 
+ Is equivalent to : 
+ 
+ "What is the probability of observing both $x$ and $z$ ?"  -->
+
+Now the most important point in BM, is that we apply such reasoning to the paramters of our model. In other words we are asking the question :
+
+> What is the probability of observing some data from my model, given it has some specified parameters $\mathbf{\theta}.$
+
+## Simple example
+
+Let's say we have some data $\{ X_i \}$ and we model it as $X \sim \mathcal{N(\mu,\sigma)}$. Usually, we would use the data to make an estimate on the values of $(\mu,\sigma)$, with both parameters fixed and computed from the data. But what is we set the parameters to have variablility ? In such a case, our model on the data becomes parametrised as $p_X \equiv p_X(.|\mu,\sigma)$. Formally, let's model the parameters as RVs as well. The values we will draw from our original model will be conditioned on the parameters, which will need to be *specified* at the sampling stage. This is where Bayesian thinking starts, because we defined an additional probability density, associated to our belief on the values of the parameters, say for the mean $\mu \sim \mathcal{N(\tau,\gamma)}$. We have a statistical model defined not only for the data, but for the parameters of our model. The distribution on $\mu$ as well as the one for $X$ form our **prior**, encompassing the best of our knwoledge about the observed phenomenon. The parameters $(\tau,\gamma)$ are referred to as **hyper-parameters** and can be used to fine tune our belief on the mean of the data we observe and sample down the way. 
+
+### What about observed data ?
+
+::: {.columns}
+
+::: {.column}
+
+Let's say now we have some observed sample data $\{X_i\}$. Having laid a general behaviour for our model in the previous paragraph, we can now turn to it and ask the question :
+
+> "What are the chances of observing the sample $\{X_i\}$ in our model, conditioned to the parameters $\vec{\mathbf{\theta}} = \{\mu, \sigma\}$ ?"
+
+In other words we are looking at $p(\{X_i\}|\mu,\sigma)$, recall Bayes rule from an earlier slide. We call this the **likelihood function**.
+
+Ex : Height distribution in human population
+
+:::
+
+::: {.column}
+![](imgs/simple_BHM_model.png)
+:::
+
+::: 
+<!-- end columns -->
+
+
+## Learning from the data
+
+From this point, the model has to *learn* the best possible parameters, given the observed data and *prior* beliefs that we communicated to it. This step relies on MCMC, sampling from the prior distribution and updating it based on the *likelihood*. At the end of this iterative process, we get the **posterior distribution**, which under the given set of priors and parameters, and for a number of samples, gives us the best belief on the parameters for the model to generate data.
+
+### Posterior distribution
+
+The posterior distribution emerges once we have adapted the prior using the likelihood we measure with respect to observed data. This step is similar to a learning epoch in the training process of Deep Learning.
+
+### MCMC
+The method allows us to fine tune the posterior distribution, by sampling synthetic data out of the prior and adapting it to be more similar to the observed data at every new iteration. Markov Chains Monte Carlo is tool that allows us to do this.
+
+## Summary BHM
+
+|                | **Data**                        | **Parameters**       |
+|----------------|---------------------------------|----------------------|
+| **Prior**      | $f(.|\theta)$                  | $\pi(\theta)$        |
+| **Posterior**  | $f(.|\theta)\pi(\theta|\{X_i\})$ | $\pi(\theta|\{X_i\})$ |
+| **Predictive** | $Y \sim f(.|\theta, \{X_i\})$    | $\pi(\theta|\{X_i\})$ |
+
+Where the family of $f$ is a choice of the user that can have a huge impact on the modelling. In our case, the choice was done for $LogNormal$.
+
+## Spatial Economic Activity
+
+### How do we develop a downscaling model with this ?
+
+After this summary, we get in the specific details of our problem. The idea is to embed an econometrics model predicting the fine scale values into this Bayesian framework. On the one hand informing the behaviour at the fine spatial scale, dictated by the econometrics model, and controling that this behaviour aligns with our prior knowledge and constraints at the coarse spatial and sectorial scale through the BHM. 
+
+::: {.r-stack}
+
+::: {.columns .fragment}
+
+::: {.column}
+### Spatial Hierarchy
+![](imgs/spat_hierarchy_plot_2.png)
+:::
+
+::: {.column }
+### Economic Hierarchy
+
+:::{layout="[[-1], [1], [-1]]"}
+![](imgs/sector_levels_plot_light.png)
+:::
+
+:::
+::: 
+
+:::
+<!-- end columns -->
+
+
+## Econometrics modelling
+
+We use a simplified linear model, inspired by (spatial) econometrics, to *inform* the bayesian method on how we expect our predictor variables to be linked to the industry level output. We apply this model at the fine resolution to every location that has some non-zero predictor variable.  
+
+$$
+\mu_{S_i} = \sum_m \alpha_m * x_m
+$$
+
+where $\alpha_m$ are learned parameters and $x_m$ are the proxy variables that we assign to the relevant sectors. The result is a multilinear model, where some variables where masked, based on reasonable assumptions on their impact on a particular output, this steps refers to the *expert knowledge* that Bayesian methods rely on. Additionally, selecting only most relevant variables for each output helps reduce the dimensionality of the problem, which poses great challenges in the context of often lacking data to validate or inform the model.
+
+
+The linear model in turn yields a value $\mu_{S_i}$ for a specific sector, which is interpreted as a mean value for a secor in a location by the Bayesian method and is combined with an uncertainty metric $\sigma$ measured before hand as the average availability of data in the system. The tuple of values $(\mu_{S_i}, \sigma)$, with $\sigma$ fixed and $\mu_{S_i}$ which is obtained from the sampled linear combination of the $\alpha$ parameters. 
+
+## All together
+
+![](imgs/JPN_model_graph.png)
+
+## Data 
+
+::: {.columns}
+::: {.column}
+
+### input
+
+#### Current
+POIs, GHSL NRES, DOSE-WDI, Copernicus, GHSL pop
+
+
+#### Additional
+Bureau of Economic Analysis (BEA), ILOSTAT, UK Business Value Added, EU IO tables
+
+## Validation
+
+- Kummu
+- Bea
+- EU IO
+- Null model (OLD)
+
+### subsectors 
+
+- GEM
+- CGFI
+- Climatrace
+- Edgar
+- MAPSPAM
+
+
+:::
+::: {.column}
+
+### Catalogue
+
+![](imgs/isic_section_coverage.png)
+
+:::
+:::
+ <!-- end columns -->
+
+# Let's see some results (finally) !
+
+## Selected Regions
+
+::: {.columns layout="[[5,3]]"}
+
+::: {.column}
+
+### FRA.13_1
+
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_total_map.png)
+
+:::
+::: {.column}
+
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_proxy_weights.png)
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_region_output.png)
+
+:::
+::: 
+<!-- end columns -->
+
+## Selected Regions
+
+::: {.columns layout="[[1,1]]"}
+
+::: {.column}
+
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_sectors_map.png)
+
+:::
+::: {.column}
+
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_sectors_mean.png)
+
+:::
+::: 
+
+## Selected Regions
+
+::: {.columns layout="[[1,1]]"}
+
+::: {.column}
+
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_poi_dens_map.png)
+
+:::
+::: {.column}
+
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_prod_vs_poi.png)
+
+:::
+:::
+
+<!-- JAPAN -->
+
+## Selected Regions
+
+::: {.columns layout="[[5,3]]"}
+
+::: {.column}
+
+### Japan
+
+![](imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_sectors_map.png)
+
+:::
+::: {.column}
+
+![](imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_proxy_weights.png)
+![](imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_region_output.png)
+
+:::
+::: 
+<!-- end columns -->
+
+## Selected Regions
+
+::: {.columns layout="[[1,1]]"}
+
+::: {.column}
+
+![](imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_sectors_map.png)
+
+:::
+::: {.column}
+
+![](imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_sectors_mean.png)
+
+:::
+::: 
+
+## Selected Regions
+
+::: {.columns layout="[[1,1]]"}
+
+::: {.column}
+
+![](imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_poi_dens_map.png)
+
+:::
+::: {.column}
+
+![](imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_prod_vs_poi.png)
+
+:::
+:::
+
+## Modelling Diagnostics
+The BHM side of things
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_trace_plot.png)
+
+## Validation FRA.13_1
+
+::: {.columns}
+::: {.column}
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_validation_kummu_diff_map.png)
+:::
+::: {.column}
+![](imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_validation_kummu_plot.png)
+:::
+:::
+<!-- end columns -->
+
+## Validation JPN
+
+::: {.columns}
+::: {.column}
+![](imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_validation_kummu_plot.png)
+
+
+:::
+::: {.column}
+
+![](imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_validation_kummu_diff_map.png)
+
+:::
+::: 
+<!-- end columns -->
