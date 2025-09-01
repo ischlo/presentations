@@ -13,3 +13,5 @@
   target="_blank">Global Spatial Indexes review and applications</a>
 - <a href="https://ischlo.github.io/presentations/down_scaling"
   target="_blank">Interpolating global economic activity data</a>
+- [03/09/2025 : OPSIS
+  Seminar](https://ischlo.github.io/presentations/seminar)

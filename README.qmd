@@ -12,3 +12,4 @@ editor: visual
 -   [Overture roads workflow with duckdb](https://ischlo.github.io/presentations/overture_roads){target="_blank"}
 -   [Global Spatial Indexes review and applications](https://ischlo.github.io/presentations/global_indexes){target="_blank"}
 -   [Interpolating global economic activity data](https://ischlo.github.io/presentations/down_scaling){target="_blank"}
+-   [03/09/2025 : OPSIS Seminar](https://ischlo.github.io/presentations/seminar)
