@@ -554,9 +554,9 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <h2>Econometrics modelling</h2>
 <p>We use a simplified linear model, inspired by (spatial) econometrics<span class="citation" data-cites="anselin1988 redding2024 zellner1985">(<a href="#/references" role="doc-biblioref" onclick="">Anselin 1988</a>; <a href="#/references" role="doc-biblioref" onclick="">Redding 2024</a>; <a href="#/references" role="doc-biblioref" onclick="">Zellner 1985</a>)</span>, to <em>inform</em> the bayesian method on how we expect our predictor variables to be linked to the industry level output. We apply this model at the fine resolution to every location that has some non-zero predictor variable.</p>
 <p><span class="math display">\[
-\mu_{S_i} = \sum_m \alpha_m * x_m
+\mu_{S_i} = \sum_m \omega_m * x_m
 \]</span></p>
-<p>where <span class="math inline">\(\alpha_m\)</span> are learned parameters and <span class="math inline">\(x_m\)</span> are the proxy variables that we assign to the relevant sectors. The result is a multilinear model, where some variables where masked, based on reasonable assumptions on their impact on a particular output, this steps refers to the <em>expert knowledge</em> that Bayesian methods rely on. Additionally, selecting only most relevant variables for each output helps reduce the dimensionality of the problem, which poses great challenges in the context of often lacking data to validate or inform the model.</p>
+<p>where <span class="math inline">\(\omega_m\)</span> are learned parameters and <span class="math inline">\(x_m\)</span> are the proxy variables that we assign to the relevant sectors. The result is a multilinear model, where some variables where masked, based on reasonable assumptions on their impact on a particular output, this steps refers to the <em>expert knowledge</em> that Bayesian methods rely on. Additionally, selecting only most relevant variables for each output helps reduce the dimensionality of the problem, which poses great challenges in the context of often lacking data to validate or inform the model.</p>
 <p>The linear model in turn yields a value <span class="math inline">\(\mu_{S_i}\)</span> for a specific sector, which is interpreted as a mean value for a secor in a location by the Bayesian method and is combined with an uncertainty metric <span class="math inline">\(\sigma\)</span> measured before hand as the average availability of data in the system. The tuple of values <span class="math inline">\((\mu_{S_i}, \sigma)\)</span>, with <span class="math inline">\(\sigma\)</span> fixed and <span class="math inline">\(\mu_{S_i}\)</span> which is obtained from the sampled linear combination of the <span class="math inline">\(\alpha\)</span> parameters.</p>
 </section>
 <section id="all-together" class="slide level2">
@@ -861,6 +861,11 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <li><strong>Methods and data publication</strong></li>
 <li>Refinement of the model to the different cases of specific data that comes for some areas</li>
 </ul>
+</section>
+<section id="section" class="slide level2">
+<h2></h2>
+<iframe height="120%" width="120%" src="./imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_deck_map.html">
+</iframe>
 </section>
 <section id="references" class="slide level2 smaller scrollable">
 <h2>References</h2>

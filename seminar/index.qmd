@@ -201,10 +201,10 @@ After this summary, we get in the specific details of our problem. The idea is t
 We use a simplified linear model, inspired by (spatial) econometrics[@anselin1988; @redding2024; @zellner1985], to *inform* the bayesian method on how we expect our predictor variables to be linked to the industry level output. We apply this model at the fine resolution to every location that has some non-zero predictor variable.
 
 $$
-\mu_{S_i} = \sum_m \alpha_m * x_m
+\mu_{S_i} = \sum_m \omega_m * x_m
 $$
 
-where $\alpha_m$ are learned parameters and $x_m$ are the proxy variables that we assign to the relevant sectors. The result is a multilinear model, where some variables where masked, based on reasonable assumptions on their impact on a particular output, this steps refers to the *expert knowledge* that Bayesian methods rely on. Additionally, selecting only most relevant variables for each output helps reduce the dimensionality of the problem, which poses great challenges in the context of often lacking data to validate or inform the model.
+where $\omega_m$ are learned parameters and $x_m$ are the proxy variables that we assign to the relevant sectors. The result is a multilinear model, where some variables where masked, based on reasonable assumptions on their impact on a particular output, this steps refers to the *expert knowledge* that Bayesian methods rely on. Additionally, selecting only most relevant variables for each output helps reduce the dimensionality of the problem, which poses great challenges in the context of often lacking data to validate or inform the model.
 
 The linear model in turn yields a value $\mu_{S_i}$ for a specific sector, which is interpreted as a mean value for a secor in a location by the Bayesian method and is combined with an uncertainty metric $\sigma$ measured before hand as the average availability of data in the system. The tuple of values $(\mu_{S_i}, \sigma)$, with $\sigma$ fixed and $\mu_{S_i}$ which is obtained from the sampled linear combination of the $\alpha$ parameters.
 
@@ -460,5 +460,9 @@ We use a mix of methods, benefiting from their strengths, but we also inherit th
 -   Validation routines using incoming regional/national datasets of different resolutions and dimensions
 -   **Methods and data publication**
 -   Refinement of the model to the different cases of specific data that comes for some areas
+
+## 
+
+<iframe height='120%' width='120%' src="./imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_deck_map.html"></iframe>
 
 ## References
