@@ -5,6 +5,12 @@
 
 ## Next steps
 
+Ex with human heights ?
+
+MCMC paragraph
+
+Table review and slide ameliorate
+
 
 ## BHM theory
 
@@ -60,7 +66,6 @@ This behaviour is well described by fat tailed distributions, such as log-normal
 
 Resources : 
 
-
 - https://bayesball.github.io/BOOK/probability-a-measurement-of-uncertainty.html 
 - https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/prior.html
 - https://bayesiancomputationbook.com/markdown/chp_01.html#conjugate-priors
@@ -73,14 +78,12 @@ Resources :
 - https://python.arviz.org/en/stable/examples/plot_bpv_tstat.html
 
 
-
 ### Pros and Cons 
 Of Bayesian (hierarchical) Modelling
 
 - Pros :
     - Can handle complex data structures
     - Allows for uncertainty quantification
-    - Flexible in terms of model specification
     - Can incorporate prior knowledge
     - Flexibility
 
@@ -93,6 +96,5 @@ Of Bayesian (hierarchical) Modelling
 - Bayesian is generally complex : Theory and formalism (Bayes, Monte Carlo, Information theory), software ecosystem (world of it's own), PPLs (Probabilistic Programming Languages)
 
 - Data whose observations are considered to be exact in the scope of an analysis are termed hard data. In contrast, soft data represent observed data that might carry nontrivial uncertainty in the context of a study
-
 
 ## Intractability

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>pydeck</title>
+        <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <script src='https://cdn.jsdelivr.net/npm/@deck.gl/jupyter-widget@~9.0.*/dist/index.js'></script>
+    <style>
+    body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#deck-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+#deck-container canvas {
+  z-index: 1;
+  background: none;
+}
+    </style>
+  </head>
+  <body>
+    <div id="deck-container">
+    </div>
+  </body>
+  <script>
+    const container = document.getElementById('deck-container');
+    const jsonInput = {
+  "initialViewState": {
+    "latitude": 41.495766450000005,
+    "longitude": -71.427153016,
+    "zoom": 8
+  },
+  "layers": [
+    {
+      "@@type": "H3HexagonLayer",
+      "data": [
+        {
+          "cols": [
+            42,
+            176,
+            127,
+            255
+          ],
+          "h3_id": "852a33affffffff",
+          "osm_A_var": 15818132.76,
+          "osm_B_var": 1.12,
+          "osm_C_var": 1.13,
+          "osm_D_var": 1.12,
+          "osm_E_var": 3097.49,
+          "osm_F_var": 29.34,
+          "osm_G_var": 3.95,
+          "osm_H_var": 1.12,
+          "osm_I_var": 1.12,
+          "osm_J_var": 641.36,
+          "osm_KL_var": 1.13,
+          "osm_M_var": 2.81,
+          "osm_N_var": 5.45,
+          "osm_O_var": 1.12,
+          "osm_PQ_var": 1.12,
+          "osm_R_var": 34.57,
+          "osm_S_var": 1.33,
+          "osm_U_var": 1.12,
+          "y_mean": 878997.73,
+          "y_mean_nice": "878,997.73",
+          "y_std": 426812.8,
+          "y_std_nice": "426,812.8",
+          "y_total": 15821959.15,
+          "y_total_nice": "15,821,959.15"
+        },
+        {
+          "cols": [
+            134,
+            213,
+            73,
+            255
+          ],
+          "h3_id": "852a331bfffffff",
+          "osm_A_var": 48373408.95,
+          "osm_B_var": 1501622552.36,
+          "osm_C_var": 8.88,
+          "osm_D_var": 1.12,
+          "osm_E_var": 48256917.39,
+          "osm_F_var": 791.06,
+          "osm_G_var": 12.95,
+          "osm_H_var": 45.01,
+          "osm_I_var": 31.7,
+          "osm_J_var": 1.12,
+          "osm_KL_var": 19.74,
+          "osm_M_var": 290.7,
+          "osm_N_var": 35.33,
+          "osm_O_var": 1.12,
+          "osm_PQ_var": 135.83,
+          "osm_R_var": 8.68,
+          "osm_S_var": 53.11,
+          "osm_U_var": 1.12,
+          "y_mean": 88791906.46,
+          "y_mean_nice": "88,791,906.46",
+          "y_std": 143155849.13,
+          "y_std_nice": "143,155,849.13",
+          "y_total": 1598254316.19,
+          "y_total_nice": "1,598,254,316.19"
+        },
+        {
+          "cols": [
+            82,
+            197,
+            105,
+            255
+          ],
+          "h3_id": "852a332bfffffff",
+          "osm_A_var": 10940956.67,
+          "osm_B_var": 112129774.55,
+          "osm_C_var": 688.44,
+          "osm_D_var": 1.12,
+          "osm_E_var": 211163172.66,
+          "osm_F_var": 245.62,
+          "osm_G_var": 5.73,
+          "osm_H_var": 9.21,
+          "osm_I_var": 17.03,
+          "osm_J_var": 650.99,
+          "osm_KL_var": 3.93,
+          "osm_M_var": 252.83,
+          "osm_N_var": 70.0,
+          "osm_O_var": 1.12,
+          "osm_PQ_var": 1.66,
+          "osm_R_var": 42.98,
+          "osm_S_var": 3.29,
+          "osm_U_var": 1.11,
+          "y_mean": 18568661.05,
+          "y_mean_nice": "18,568,661.05",
+          "y_std": 35538074.75,
+          "y_std_nice": "35,538,074.75",
+          "y_total": 334235898.95,
+          "y_total_nice": "334,235,898.95"
+        },
+        {
+          "cols": [
+            82,
+            197,
+            105,
+            255
+          ],
+          "h3_id": "852a33abfffffff",
+          "osm_A_var": 2567.51,
+          "osm_B_var": 2672.24,
+          "osm_C_var": 10302486.11,
+          "osm_D_var": 863.85,
+          "osm_E_var": 1923986.56,
+          "osm_F_var": 27542200.42,
+          "osm_G_var": 2707181.75,
+          "osm_H_var": 118109.12,
+          "osm_I_var": 1497944.32,
+          "osm_J_var": 1671584.4,
+          "osm_KL_var": 3185722.37,
+          "osm_M_var": 272970.88,
+          "osm_N_var": 806224.74,
+          "osm_O_var": 2704.87,
+          "osm_PQ_var": 850441.2,
+          "osm_R_var": 987299.83,
+          "osm_S_var": 5044335.84,
+          "osm_U_var": 1.13,
+          "y_mean": 3162183.17,
+          "y_mean_nice": "3,162,183.17",
+          "y_std": 8447094.21,
+          "y_std_nice": "8,447,094.21",
+          "y_total": 56919297.14,
+          "y_total_nice": "56,919,297.14"
+        },
+        {
+          "cols": [
+            30,
+            155,
+            138,
+            255
+          ],
+          "h3_id": "852a3377fffffff",
+          "osm_A_var": 30954.39,
+          "osm_B_var": 1919536.87,
+          "osm_C_var": 41.36,
+          "osm_D_var": 1.12,
+          "osm_E_var": 68.44,
+          "osm_F_var": 1.12,
+          "osm_G_var": 1.13,
+          "osm_H_var": 14.25,
+          "osm_I_var": 1.27,
+          "osm_J_var": 23.35,
+          "osm_KL_var": 1.59,
+          "osm_M_var": 1.13,
+          "osm_N_var": 1.12,
+          "osm_O_var": 1.13,
+          "osm_PQ_var": 4.54,
+          "osm_R_var": 1.77,
+          "osm_S_var": 1.12,
+          "osm_U_var": 1.12,
+          "y_mean": 108369.82,
+          "y_mean_nice": "108,369.82",
+          "y_std": 173475.48,
+          "y_std_nice": "173,475.48",
+          "y_total": 1950656.82,
+          "y_total_nice": "1,950,656.82"
+        },
+        {
+          "cols": [
+            42,
+            176,
+            127,
+            255
+          ],
+          "h3_id": "852a333bfffffff",
+          "osm_A_var": 15218343.72,
+          "osm_B_var": 18032033.93,
+          "osm_C_var": 9612.5,
+          "osm_D_var": 1.12,
+          "osm_E_var": 637194.64,
+          "osm_F_var": 12379.64,
+          "osm_G_var": 120.92,
+          "osm_H_var": 477.83,
+          "osm_I_var": 99.25,
+          "osm_J_var": 73225.87,
+          "osm_KL_var": 102.56,
+          "osm_M_var": 3170.18,
+          "osm_N_var": 134.58,
+          "osm_O_var": 1.12,
+          "osm_PQ_var": 59688.94,
+          "osm_R_var": 327.29,
+          "osm_S_var": 272.06,
+          "osm_U_var": 1.13,
+          "y_mean": 1891510.4,
+          "y_mean_nice": "1,891,510.4",
+          "y_std": 2211655.1,
+          "y_std_nice": "2,211,655.1",
+          "y_total": 34047187.28,
+          "y_total_nice": "34,047,187.28"
+        },
+        {
+          "cols": [
+            194,
+            223,
+            35,
+            255
+          ],
+          "h3_id": "852a3317fffffff",
+          "osm_A_var": 1.12,
+          "osm_B_var": 2606.88,
+          "osm_C_var": 2689800511.81,
+          "osm_D_var": 2621307054.34,
+          "osm_E_var": 2367254850.35,
+          "osm_F_var": 2554818936.09,
+          "osm_G_var": 3938233678.56,
+          "osm_H_var": 3732990045.95,
+          "osm_I_var": 3631205848.88,
+          "osm_J_var": 4328549403.62,
+          "osm_KL_var": 2399210995.76,
+          "osm_M_var": 4163677681.47,
+          "osm_N_var": 4163826497.42,
+          "osm_O_var": 19754038.14,
+          "osm_PQ_var": 16187894642.89,
+          "osm_R_var": 4246850783.7,
+          "osm_S_var": 3971295557.26,
+          "osm_U_var": 1.12,
+          "y_mean": 3389815174.19,
+          "y_mean_nice": "3,389,815,174.19",
+          "y_std": 82625288457.99,
+          "y_std_nice": "82,625,288,457.99",
+          "y_total": 61016673135.36,
+          "y_total_nice": "61,016,673,135.36"
+        },
+        {
+          "cols": [
+            42,
+            176,
+            127,
+            255
+          ],
+          "h3_id": "852a3303fffffff",
+          "osm_A_var": 1570666.66,
+          "osm_B_var": 50724.23,
+          "osm_C_var": 2010046.54,
+          "osm_D_var": 859.46,
+          "osm_E_var": 11266611.23,
+          "osm_F_var": 3113958.42,
+          "osm_G_var": 577750.61,
+          "osm_H_var": 133187.77,
+          "osm_I_var": 71099.37,
+          "osm_J_var": 895672.88,
+          "osm_KL_var": 198126.16,
+          "osm_M_var": 558428.64,
+          "osm_N_var": 842484.79,
+          "osm_O_var": 1.12,
+          "osm_PQ_var": 181914.81,
+          "osm_R_var": 27211.29,
+          "osm_S_var": 2693018.04,
+          "osm_U_var": 1.12,
+          "y_mean": 1343986.84,
+          "y_mean_nice": "1,343,986.84",
+          "y_std": 2795433.67,
+          "y_std_nice": "2,795,433.67",
+          "y_total": 24191763.15,
+          "y_total_nice": "24,191,763.15"
+        },
+        {
+          "cols": [
+            134,
+            213,
+            73,
+            255
+          ],
+          "h3_id": "852a3313fffffff",
+          "osm_A_var": 34859.1,
+          "osm_B_var": 47096267.36,
+          "osm_C_var": 7125444.35,
+          "osm_D_var": 855.49,
+          "osm_E_var": 44065754.98,
+          "osm_F_var": 7832883.15,
+          "osm_G_var": 8813708.89,
+          "osm_H_var": 4136708.83,
+          "osm_I_var": 4446223.31,
+          "osm_J_var": 2242863.15,
+          "osm_KL_var": 12384665.6,
+          "osm_M_var": 14413380.54,
+          "osm_N_var": 5065854.58,
+          "osm_O_var": 4092180205.69,
+          "osm_PQ_var": 4920736.82,
+          "osm_R_var": 1424545.16,
+          "osm_S_var": 26608063.11,
+          "osm_U_var": 1.12,
+          "y_mean": 237932945.62,
+          "y_mean_nice": "237,932,945.62",
+          "y_std": 619134769.17,
+          "y_std_nice": "619,134,769.17",
+          "y_total": 4282793021.25,
+          "y_total_nice": "4,282,793,021.25"
+        },
+        {
+          "cols": [
+            134,
+            213,
+            73,
+            255
+          ],
+          "h3_id": "852a3323fffffff",
+          "osm_A_var": 4418.64,
+          "osm_B_var": 794.79,
+          "osm_C_var": 5367.34,
+          "osm_D_var": 1.12,
+          "osm_E_var": 50184.34,
+          "osm_F_var": 9286.31,
+          "osm_G_var": 814.79,
+          "osm_H_var": 608.83,
+          "osm_I_var": 14940.54,
+          "osm_J_var": 5026.87,
+          "osm_KL_var": 71018.49,
+          "osm_M_var": 1797.06,
+          "osm_N_var": 275.16,
+          "osm_O_var": 1.11,
+          "osm_PQ_var": 2792.98,
+          "osm_R_var": 2846.57,
+          "osm_S_var": 1671.22,
+          "osm_U_var": 3894936001.43,
+          "y_mean": 216394880.42,
+          "y_mean_nice": "216,394,880.42",
+          "y_std": 571910000.97,
+          "y_std_nice": "571,910,000.97",
+          "y_total": 3895107847.58,
+          "y_total_nice": "3,895,107,847.58"
+        },
+        {
+          "cols": [
+            134,
+            213,
+            73,
+            255
+          ],
+          "h3_id": "852a330ffffffff",
+          "osm_A_var": 15035846.11,
+          "osm_B_var": 2070340311.66,
+          "osm_C_var": 3616.1,
+          "osm_D_var": 848.51,
+          "osm_E_var": 3072.6,
+          "osm_F_var": 5029.96,
+          "osm_G_var": 21.11,
+          "osm_H_var": 45.54,
+          "osm_I_var": 3.54,
+          "osm_J_var": 1.12,
+          "osm_KL_var": 102.87,
+          "osm_M_var": 59.91,
+          "osm_N_var": 97.52,
+          "osm_O_var": 1.12,
+          "osm_PQ_var": 532.54,
+          "osm_R_var": 27.67,
+          "osm_S_var": 62.72,
+          "osm_U_var": 1.13,
+          "y_mean": 115854982.32,
+          "y_mean_nice": "115,854,982.32",
+          "y_std": 183511580.88,
+          "y_std_nice": "183,511,580.88",
+          "y_total": 2085389681.73,
+          "y_total_nice": "2,085,389,681.73"
+        },
+        {
+          "cols": [
+            42,
+            176,
+            127,
+            255
+          ],
+          "h3_id": "852a330bfffffff",
+          "osm_A_var": 1574452.21,
+          "osm_B_var": 3493417.48,
+          "osm_C_var": 54.3,
+          "osm_D_var": 1.12,
+          "osm_E_var": 1.12,
+          "osm_F_var": 107.47,
+          "osm_G_var": 38.71,
+          "osm_H_var": 2.04,
+          "osm_I_var": 11.18,
+          "osm_J_var": 23.16,
+          "osm_KL_var": 396.09,
+          "osm_M_var": 21.02,
+          "osm_N_var": 10.67,
+          "osm_O_var": 1.12,
+          "osm_PQ_var": 32.63,
+          "osm_R_var": 1.12,
+          "osm_S_var": 53.73,
+          "osm_U_var": 1.12,
+          "y_mean": 281590.35,
+          "y_mean_nice": "281,590.35",
+          "y_std": 371357.8,
+          "y_std_nice": "371,357.8",
+          "y_total": 5068626.29,
+          "y_total_nice": "5,068,626.29"
+        },
+        {
+          "cols": [
+            134,
+            213,
+            73,
+            255
+          ],
+          "h3_id": "852a3307fffffff",
+          "osm_A_var": 995.65,
+          "osm_B_var": 50299.97,
+          "osm_C_var": 200247688.01,
+          "osm_D_var": 61122.02,
+          "osm_E_var": 279829622.06,
+          "osm_F_var": 13169884.41,
+          "osm_G_var": 38283364.42,
+          "osm_H_var": 33145898.62,
+          "osm_I_var": 10174090.08,
+          "osm_J_var": 53800816.68,
+          "osm_KL_var": 280154713.18,
+          "osm_M_var": 33080796.61,
+          "osm_N_var": 20908215.67,
+          "osm_O_var": 453745.23,
+          "osm_PQ_var": 3134859.76,
+          "osm_R_var": 7873524.63,
+          "osm_S_var": 46992553.19,
+          "osm_U_var": 1.12,
+          "y_mean": 56742343.96,
+          "y_mean_nice": "56,742,343.96",
+          "y_std": 316398035.97,
+          "y_std_nice": "316,398,035.97",
+          "y_total": 1021362191.32,
+          "y_total_nice": "1,021,362,191.32"
+        }
+      ],
+      "extruded": false,
+      "filled": true,
+      "getFillColor": "@@=cols",
+      "getHexagon": "@@=h3_id",
+      "getLineColor": [
+        255,
+        255,
+        255,
+        0
+      ],
+      "id": "69cd488f-4f07-44b7-a402-1f1b5ad5aed2",
+      "lineWidthMaxPixels": 1,
+      "opacity": 0.6,
+      "pickable": true,
+      "stroked": true
+    }
+  ],
+  "mapProvider": "carto",
+  "mapStyle": "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+  "views": [
+    {
+      "@@type": "MapView",
+      "controller": true
+    }
+  ]
+};
+    const tooltip = {'text': 'Plotting y_total : {y_total_nice} \nBHM: \ny_mean : {y_mean_nice} \ny_std : {y_std_nice} \n h3_id : {h3_id}'};
+    const customLibraries = null;
+    const configuration = null;
+
+    const deckInstance = createDeck({
+                  container,
+      jsonInput,
+      tooltip,
+      customLibraries,
+      configuration
+    });
+
+  </script>
+</html>

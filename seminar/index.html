@@ -29,7 +29,27 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -360,9 +380,11 @@
 <section id="where-we-left-off" class="slide level2">
 <h2>Where we left off</h2>
 <ul>
-<li>Pycnophylactic condition</li>
+<li>Pycnophylactic condition <span class="citation" data-cites="tobler1979">Tobler (<a href="#/references" role="doc-biblioref" onclick="">1979</a>)</span></li>
 <li>Rescaling, using Overture POIs and their categories as source for density distribution of activity on the ground.</li>
 </ul>
+<div class="columns">
+<div class="column" style="width:50%;">
 <h3 id="pros">Pros</h3>
 <ul>
 <li>Simple</li>
@@ -376,17 +398,43 @@
 <li>Hard constraint</li>
 <li>No flexibility</li>
 </ul>
+<h3 id="can-we-do-better">Can we do better ?</h3>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="imgs/ezgif.com-animated-gif-maker.gif" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div></div>
 </section>
-<section id="can-we-do-better" class="slide level2">
-<h2>Can we do better ?</h2>
-<p><strong>YES</strong>, but at a bigger cost.</p>
-<p>However, it allows us to answer all off the previous cons, while preserving the pros.</p>
-<p>The methodology was significantly expanded to use <strong>Bayesian Hierarchical Modelling</strong> (BHM).</p>
+<section id="yes" class="slide level2">
+<h2>YES</h2>
+<p>But at a bigger cost.</p>
+<p>The methodology was significantly expanded to use <strong>Bayesian Hierarchical Modelling</strong> (BHM) <span class="citation" data-cites="vandeschoot2021">(<a href="#/references" role="doc-biblioref" onclick="">Schoot et al. 2021</a>)</span>.</p>
 <h3 id="methods">Methods</h3>
 <h4 id="bhm">BHM</h4>
+<div class="columns">
+<div class="column">
+<h3 id="pros-1">Pros</h3>
+<ul>
+<li>Can handle complex data structures</li>
+<li>Allows for uncertainty quantification</li>
+<li>Can incorporate prior knowledge</li>
+<li>Flexibility</li>
+</ul>
+</div><div class="column">
+<h3 id="cons-1">Cons</h3>
+<ul>
+<li>Gets computationally demanding</li>
+<li>Requires <strong>careful</strong> prior selection</li>
+<li>Sensitive to model specification</li>
+<li>Flexibility</li>
+</ul>
+</div></div>
+<p>Bayesian is generally complex : Theory and formalism (Bayes, Markov Chain Monte Carlo, Information theory, Statistics…), software ecosystem (world of it’s own), PPLs (Probabilistic Programming Languages)…</p>
 <p>As the name suggests, at the core of this method lies the familiar Bayes rule. Let us remind ourselves. If we have two random variables (RV), and we are modelling them together, we might find ourselves asking questions of the nature :</p>
 <blockquote>
-<p>What is the probability of a joint event, or a conditional event, having observed only the outcome of a single one ?</p>
+<p>What is the probability of a joint event, or a conditional event, having observed the outcome of a single one ?</p>
 </blockquote>
 </section>
 <section id="bhm-1" class="slide level2">
@@ -409,19 +457,14 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <p><img data-src="imgs/venn.png"></p>
 </div></div>
 </div>
-<p><!-- "What is the probability of observing $x$, having already observed $z$ ?"
- 
- Is equivalent to : 
- 
- "What is the probability of observing both $x$ and $z$ ?"  --></p>
-<p>Now the most important point in BM, is that we apply such reasoning to the paramters of our model. In other words we are asking the question :</p>
+<p>Now the most important point in BM, is that we apply such reasoning to the parameters of our model. In other words we are asking the question :</p>
 <blockquote>
 <p>What is the probability of observing some data from my model, given it has some specified parameters <span class="math inline">\(\mathbf{\theta}.\)</span></p>
 </blockquote>
 </section>
 <section id="simple-example" class="slide level2">
 <h2>Simple example</h2>
-<p>Let’s say we have some data <span class="math inline">\(\{ X_i \}\)</span> and we model it as <span class="math inline">\(X \sim \mathcal{N(\mu,\sigma)}\)</span>. Usually, we would use the data to make an estimate on the values of <span class="math inline">\((\mu,\sigma)\)</span>, with both parameters fixed and computed from the data. But what is we set the parameters to have variablility ? In such a case, our model on the data becomes parametrised as <span class="math inline">\(p_X \equiv p_X(.|\mu,\sigma)\)</span>. Formally, let’s model the parameters as RVs as well. The values we will draw from our original model will be conditioned on the parameters, which will need to be <em>specified</em> at the sampling stage. This is where Bayesian thinking starts, because we defined an additional probability density, associated to our belief on the values of the parameters, say for the mean <span class="math inline">\(\mu \sim \mathcal{N(\tau,\gamma)}\)</span>. We have a statistical model defined not only for the data, but for the parameters of our model. The distribution on <span class="math inline">\(\mu\)</span> as well as the one for <span class="math inline">\(X\)</span> form our <strong>prior</strong>, encompassing the best of our knwoledge about the observed phenomenon. The parameters <span class="math inline">\((\tau,\gamma)\)</span> are referred to as <strong>hyper-parameters</strong> and can be used to fine tune our belief on the mean of the data we observe and sample down the way.</p>
+<p>Let’s say we have some data <span class="math inline">\(\{ X_i \}\)</span> and we model it as <span class="math inline">\(X \sim \mathcal{N(\mu,\sigma)}\)</span>. Usually, we would use the data to make an estimate on the values of <span class="math inline">\((\mu,\sigma)\)</span>, with both parameters fixed and computed from the data. But what is we set the parameters to have variablility ? In such a case, our model on the data becomes parametrised as <span class="math inline">\(p_X \equiv p_X(.|\mu,\sigma)\)</span>. Formally, let’s model the parameters as RVs as well. The values we will draw from our original model will be conditioned on the parameters, which will need to be <em>specified</em> at the sampling stage. This is where Bayesian thinking starts, because we defined an additional probability density, associated to our belief on the values of the parameters, say for the mean <span class="math inline">\(\mu \sim \mathcal{N(\tau,\gamma)}\)</span>. We have a statistical model defined not only for the data, but for the parameters of our model. The distribution on <span class="math inline">\(\mu\)</span> as well as the one for <span class="math inline">\(X\)</span> form our <strong>prior</strong>, encompassing the best of our knowledge about the observed phenomenon. The parameters <span class="math inline">\((\tau,\gamma)\)</span> are referred to as <strong>hyper-parameters</strong> and can be used to fine tune our belief on the mean of the data we observe and sample down the way.</p>
 <h3 id="what-about-observed-data">What about observed data ?</h3>
 <div class="columns">
 <div class="column">
@@ -443,14 +486,12 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <p>The posterior distribution emerges once we have adapted the prior using the likelihood we measure with respect to observed data. This step is similar to a learning epoch in the training process of Deep Learning.</p>
 <h3 id="mcmc">MCMC</h3>
 <p>The method allows us to fine tune the posterior distribution, by sampling synthetic data out of the prior and adapting it to be more similar to the observed data at every new iteration. Markov Chains Monte Carlo is tool that allows us to do this.</p>
-</section>
-<section id="summary-bhm" class="slide level2">
-<h2>Summary BHM</h2>
+<h3 id="summary-bhm">Summary BHM</h3>
 <table class="caption-top">
 <colgroup>
-<col style="width: 22%">
+<col style="width: 21%">
 <col style="width: 46%">
-<col style="width: 30%">
+<col style="width: 31%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -482,7 +523,7 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <section id="spatial-economic-activity" class="slide level2">
 <h2>Spatial Economic Activity</h2>
 <h3 id="how-do-we-develop-a-downscaling-model-with-this">How do we develop a downscaling model with this ?</h3>
-<p>After this summary, we get in the specific details of our problem. The idea is to embed an econometrics model predicting the fine scale values into this Bayesian framework. On the one hand informing the behaviour at the fine spatial scale, dictated by the econometrics model, and controling that this behaviour aligns with our prior knowledge and constraints at the coarse spatial and sectorial scale through the BHM.</p>
+<p>After this summary, we get in the specific details of our problem. The idea is to embed an econometrics model predicting the fine scale values into this Bayesian framework. On the one hand informing the behavior at the fine spatial scale, dictated by the econometrics model, and controlling that this behavior aligns with our prior knowledge and constraints at the coarse spatial and sector scale through the BHM.</p>
 <div class="r-stack">
 <div class="columns fragment">
 <div class="column">
@@ -511,7 +552,7 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 </section>
 <section id="econometrics-modelling" class="slide level2">
 <h2>Econometrics modelling</h2>
-<p>We use a simplified linear model, inspired by (spatial) econometrics, to <em>inform</em> the bayesian method on how we expect our predictor variables to be linked to the industry level output. We apply this model at the fine resolution to every location that has some non-zero predictor variable.</p>
+<p>We use a simplified linear model, inspired by (spatial) econometrics<span class="citation" data-cites="anselin1988 redding2024 zellner1985">(<a href="#/references" role="doc-biblioref" onclick="">Anselin 1988</a>; <a href="#/references" role="doc-biblioref" onclick="">Redding 2024</a>; <a href="#/references" role="doc-biblioref" onclick="">Zellner 1985</a>)</span>, to <em>inform</em> the bayesian method on how we expect our predictor variables to be linked to the industry level output. We apply this model at the fine resolution to every location that has some non-zero predictor variable.</p>
 <p><span class="math display">\[
 \mu_{S_i} = \sum_m \alpha_m * x_m
 \]</span></p>
@@ -524,21 +565,23 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <img data-src="imgs/JPN_model_graph.png" class="r-stretch"></section>
 <section id="data" class="slide level2">
 <h2>Data</h2>
-<div class="columns">
-<div class="column">
-<h3 id="input">input</h3>
+<div>
+
+</div>
+<div class="columns quarto-layout-panel" data-layout="[[1,2]]" data-fontsize="10">
+<div class="quarto-layout-row">
+<div class="column quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<h3 id="input1">Input<sup>1</sup></h3>
 <h4 id="current">Current</h4>
-<p>POIs, GHSL NRES, DOSE-WDI, Copernicus, GHSL pop</p>
-<p>####&nbsp;Additional Bureau of Economic Analysis (BEA), ILOSTAT, UK Business Value Added, EU IO tables</p>
-<section id="validation" class="slide level2">
-<h2>Validation</h2>
+<p>POIs, GHSL NRES, DOSE-WDI, Copernicus, GHSL pop, Bureau of Economic Analysis (BEA), ILOSTAT, UK Business Value Added, EU IO tables</p>
+<h3 id="validation">Validation</h3>
 <ul>
 <li>Kummu</li>
 <li>Bea</li>
 <li>EU IO</li>
 <li>Null model (OLD)</li>
 </ul>
-<h3 id="subsectors">subsectors</h3>
+<h3 id="subsectors">Subsectors</h3>
 <ul>
 <li>GEM</li>
 <li>CGFI</li>
@@ -546,16 +589,17 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <li>Edgar</li>
 <li>MAPSPAM</li>
 </ul>
-</section>
-</div><div class="column">
+</div><div class="column quarto-layout-cell" style="flex-basis: 66.7%;justify-content: center;">
 <h3 id="catalogue">Catalogue</h3>
+<p>Is up on the cluster with access and manipulation facilitated by the <a href="https://github.com/nismod/scale-nav"><code>scalenav</code></a> package</p>
 <p><img data-src="imgs/isic_section_coverage.png"></p>
 </div></div>
-<p><!-- end columns --></p>
-</section></section>
+</div>
+<!-- end columns -->
+<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="janssens-maenhout2019">Janssens-Maenhout et al. (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span>; <span class="citation" data-cites="europeancommission.jointresearchcentre.2023">European Commission. Joint Research Centre. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>; <span class="citation" data-cites="gaulier2010">Gaulier and Zignago (<a href="#/references" role="doc-biblioref" onclick="">2010</a>)</span>; <span class="citation" data-cites="kummu2018a">Kummu, Taka, and Guillaume (<a href="#/references" role="doc-biblioref" onclick="">2018a</a>)</span>; <span class="citation" data-cites="you2014">You et al. (<a href="#/references" role="doc-biblioref" onclick="">2014</a>)</span>; <span class="citation" data-cites="wenz2015">Wenz et al. (<a href="#/references" role="doc-biblioref" onclick="">2015</a>)</span> …</p></li></ol></aside></section></section>
 <section>
-<section id="lets-see-some-results-finally" class="title-slide slide level1 center">
-<h1>Let’s see some results (finally) !</h1>
+<section id="lets-see-some-results" class="title-slide slide level1 center">
+<h1>Let’s see some results !</h1>
 
 </section>
 <section id="selected-regions" class="slide level2">
@@ -567,7 +611,11 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <div class="quarto-layout-row">
 <div class="column quarto-layout-cell" style="flex-basis: 62.5%;justify-content: center;">
 <h3 id="fra.13_1">FRA.13_1</h3>
-<p><img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_total_map.png"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_total_map.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
 </div><div class="column quarto-layout-cell" style="flex-basis: 37.5%;justify-content: flex-start;">
 <p><img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_proxy_weights.png"> <img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_region_output.png"></p>
 </div></div>
@@ -579,10 +627,21 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <div>
 
 </div>
-<div class="columns quarto-layout-panel" data-layout="[[1,1]]">
+<div class="columns quarto-layout-panel" data-layout="[[-1,-1],[1,1],[-1,-1]]">
 <div class="quarto-layout-row">
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+</div><div class="quarto-layout-row">
 <div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_sectors_map.png"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_sectors_map.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
 </div><div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <p><img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_sectors_mean.png"></p>
 </div></div>
@@ -593,8 +652,15 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <div>
 
 </div>
-<div class="columns quarto-layout-panel" data-layout="[[1,1]]">
+<div class="columns quarto-layout-panel" data-layout="[[-1,-1],[1,1],[-1,-1]]">
 <div class="quarto-layout-row">
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+</div><div class="quarto-layout-row">
 <div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <p><img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_poi_dens_map.png"></p>
 </div><div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
@@ -624,8 +690,15 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <div>
 
 </div>
-<div class="columns quarto-layout-panel" data-layout="[[1,1]]">
+<div class="columns quarto-layout-panel" data-layout="[[-1,-1],[1,1],[-1,-1]]">
 <div class="quarto-layout-row">
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+</div><div class="quarto-layout-row">
 <div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <p><img data-src="imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_sectors_map.png"></p>
 </div><div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
@@ -638,8 +711,15 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <div>
 
 </div>
-<div class="columns quarto-layout-panel" data-layout="[[1,1]]">
+<div class="columns quarto-layout-panel" data-layout="[[-1,-1],[1,1],[-1,-1]]">
 <div class="quarto-layout-row">
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+</div><div class="quarto-layout-row">
 <div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <p><img data-src="imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_poi_dens_map.png"></p>
 </div><div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
@@ -651,8 +731,10 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <h2>Modelling Diagnostics</h2>
 <p>The BHM side of things <img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_trace_plot.png"></p>
 </section>
-<section id="validation-fra.13_1" class="slide level2">
-<h2>Validation FRA.13_1</h2>
+<section id="validation-1" class="slide level2">
+<h2>Validation 1</h2>
+<p>We use existing available downscaled data sets, in which one of the 2 dimensions (spatial, sectorial) is coarse, and reduce our data to validate at the resolution of the available data. Example with <span class="citation" data-cites="kummu2018">(<a href="#/references" role="doc-biblioref" onclick="">Kummu, Taka, and Guillaume 2018b</a>)</span>, where the data is total GDP at a fine spatial scale. We reduce the BHM model data by aggregating each locations output across sectors.</p>
+<h3 id="fra.13_1-1">FRA.13_1</h3>
 <div class="columns">
 <div class="column">
 <p><img data-src="imgs/FRA.13_1_2025_8_29_16_22/BHM_FRA.13_1_h3_6_indus_3_validation_kummu_diff_map.png"></p>
@@ -661,21 +743,172 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 </div></div>
 <!-- end columns -->
 </section>
-<section id="validation-jpn" class="slide level2">
-<h2>Validation JPN</h2>
+<section id="validation-1-1" class="slide level2">
+<h2>Validation 1</h2>
+<h3 id="jpn">JPN</h3>
 <div class="columns">
 <div class="column">
-<p><img data-src="imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_validation_kummu_plot.png"></p>
-</div><div class="column">
 <p><img data-src="imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_validation_kummu_diff_map.png"></p>
+</div><div class="column">
+<p><img data-src="imgs/JPN_2025_8_29_20_56/BHM_JPN_h3_5_indus_3_validation_kummu_plot.png"></p>
 </div></div>
 <!-- end columns -->
+</section>
+<section id="validation-2" class="slide level2">
+<h2>Validation 2</h2>
+<div>
+
+</div>
+<div class="columns quarto-layout-panel" data-layout="[[5,3]]">
+<div class="quarto-layout-row">
+<div class="column quarto-layout-cell" style="flex-basis: 62.5%;justify-content: center;">
+<h3 id="florida">Florida</h3>
+<p><img data-src="imgs/USA.10_1_2025_9_2_15_52/BHM_USA.10_1_h3_5_indus_3_total_map.png"></p>
+</div><div class="column quarto-layout-cell" style="flex-basis: 37.5%;justify-content: center;">
+<p><img data-src="imgs/USA.10_1_2025_9_2_15_52/BHM_USA.10_1_h3_5_indus_3_proxy_weights.png"></p>
+<p><img data-src="imgs/USA.10_1_2025_9_2_15_52/BHM_USA.10_1_h3_5_indus_3_region_output.png"></p>
+</div></div>
+</div>
+<!-- end columns -->
+</section>
+<section id="validation-2-1" class="slide level2">
+<h2>Validation 2</h2>
+<div>
+
+</div>
+<div class="columns quarto-layout-panel" data-layout="[[-1,-1],[1,1],[-1,-1]]">
+<div class="quarto-layout-row">
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+</div><div class="quarto-layout-row">
+<div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="imgs/USA.10_1_2025_9_2_15_52/BHM_USA.10_1_h3_5_indus_3_sectors_map.png"></p>
+</div><div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="imgs/USA.10_1_2025_9_2_15_52/BHM_USA.10_1_h3_5_indus_3_sectors_mean.png"></p>
+</div></div>
+</div>
+</section>
+<section id="validation-2-2" class="slide level2">
+<h2>Validation 2</h2>
+<div>
+
+</div>
+<div class="columns quarto-layout-panel" data-layout="[[-1,-1],[1,1],[-1,-1]]">
+<div class="quarto-layout-row">
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+</div><div class="quarto-layout-row">
+<div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="imgs/USA.10_1_2025_9_2_15_52/BHM_USA.10_1_h3_5_indus_3_poi_dens_map.png"></p>
+</div><div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="imgs/USA.10_1_2025_9_2_15_52/BHM_USA.10_1_h3_5_indus_3_prod_vs_poi.png"></p>
+</div></div>
+</div>
+</section>
+<section id="validation-2-3" class="slide level2">
+<h2>Validation 2</h2>
+<p>Using national reports on per sector productivity at coarse geographic resolution.</p>
+
+<img data-src="imgs/USA.10_1_2025_9_2_14_55/BHM_USA.10_1_h3_4_indus_3_bea_bhm.png" class="r-stretch"><h3 id="reversing-the-question">Reversing the question</h3>
+<p>The flexibility of BHM allows us to reverse the use of the finer resolution economic output data and use it as a prior knowledge. This is a work in progress feature that is almost implemented.</p>
+</section></section>
+<section>
+<section id="current-challenges-limitations-and-next-steps" class="title-slide slide level1 center">
+<h1>Current challenges, limitations and next steps</h1>
+
+</section>
+<section id="challenges" class="slide level2">
+<h2>Challenges</h2>
+<p>We use a mix of methods, benefiting from their strengths, but we also inherit their limitations and challenges.</p>
+<ul>
+<li><p>Dimensionality</p></li>
+<li><p>Econ model</p>
+<ul>
+<li>Colinearity of proxies</li>
+<li>Sensitive to spatial and sectorial resolution</li>
+</ul></li>
+<li><p>BHM</p>
+<ul>
+<li>Sampling in very high dimensions</li>
+<li>Intricate Diagnostics</li>
+<li>Complex formalism</li>
+<li>Different software ecosysytem and programming paradigm</li>
+<li>Sensitive to spatial and sectorial resolution</li>
+</ul></li>
+<li><p>Data</p>
+<ul>
+<li>We are constantly looking for data that could be either used to inform our prior, proxy layers, or validation.</li>
+</ul></li>
+<li><p>Predictive modelling</p>
+<ul>
+<li>Requires further specifying what are we predicting ?</li>
+</ul></li>
+</ul>
+</section>
+<section id="next-steps" class="slide level2">
+<h2>Next Steps</h2>
+<ul>
+<li>Running all regions on the cluster</li>
+<li>Validation routines using incoming regional/national datasets of different resolutions and dimensions</li>
+<li><strong>Methods and data publication</strong></li>
+<li>Refinement of the model to the different cases of specific data that comes for some areas</li>
+</ul>
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
 </div>
 </div>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-anselin1988" class="csl-entry" role="listitem">
+Anselin, L. 1988. <em>Spatial Econometrics</em>. Studies in Operational Regional Science Ser v.4. Dordrecht: Springer Netherlands.
+</div>
+<div id="ref-europeancommission.jointresearchcentre.2023" class="csl-entry" role="listitem">
+European Commission. Joint Research Centre. 2023. <em>GHSL data package 2023.</em> LU: Publications Office. <a href="https://data.europa.eu/doi/10.2760/098587">https://data.europa.eu/doi/10.2760/098587</a>.
+</div>
+<div id="ref-gaulier2010" class="csl-entry" role="listitem">
+Gaulier, Guillaume, and Soledad Zignago. 2010. <span>“BACI: International Trade Database at the Product-Level. The 1994-2007 Version.”</span> <a href="http://www.cepii.fr/CEPII/fr/publications/wp/abstract.asp?NoDoc=2726">http://www.cepii.fr/CEPII/fr/publications/wp/abstract.asp?NoDoc=2726</a>.
+</div>
+<div id="ref-janssens-maenhout2019" class="csl-entry" role="listitem">
+Janssens-Maenhout, Greet, Monica Crippa, Diego Guizzardi, Marilena Muntean, Edwin Schaaf, Frank Dentener, Peter Bergamaschi, et al. 2019. <span>“EDGAR V4.3.2 Global Atlas of the Three Major Greenhouse Gas Emissions for the Period 1970<span></span>2012.”</span> <em>Earth System Science Data</em> 11 (3): 959–1002. <a href="https://doi.org/10.5194/essd-11-959-2019">https://doi.org/10.5194/essd-11-959-2019</a>.
+</div>
+<div id="ref-kummu2018" class="csl-entry" role="listitem">
+Kummu, Matti, Maija Taka, and Joseph H. A. Guillaume. 2018b. <span>“Gridded Global Datasets for Gross Domestic Product and Human Development Index over 1990<span></span>2015.”</span> <em>Scientific Data</em> 5 (1): 180004. <a href="https://doi.org/10.1038/sdata.2018.4">https://doi.org/10.1038/sdata.2018.4</a>.
+</div>
+<div id="ref-kummu2018a" class="csl-entry" role="listitem">
+———. 2018a. <span>“Gridded Global Datasets for Gross Domestic Product and Human Development Index over 1990<span></span>2015.”</span> <em>Scientific Data</em> 5 (1): 180004. <a href="https://doi.org/10.1038/sdata.2018.4">https://doi.org/10.1038/sdata.2018.4</a>.
+</div>
+<div id="ref-redding2024" class="csl-entry" role="listitem">
+Redding, Stephen J. 2024. <span>“Spatial Economics,”</span> Working paper series, November. <a href="https://doi.org/10.3386/w33125">https://doi.org/10.3386/w33125</a>.
+</div>
+<div id="ref-vandeschoot2021" class="csl-entry" role="listitem">
+Schoot, Rens van de, Sarah Depaoli, Ruth King, Bianca Kramer, Kaspar Märtens, Mahlet G. Tadesse, Marina Vannucci, et al. 2021. <span>“Bayesian Statistics and Modelling.”</span> <em>Nature Reviews Methods Primers</em> 1 (1): 1–26. <a href="https://doi.org/10.1038/s43586-020-00001-2">https://doi.org/10.1038/s43586-020-00001-2</a>.
+</div>
+<div id="ref-tobler1979" class="csl-entry" role="listitem">
+Tobler, Waldo R. 1979. <span>“Smooth Pycnophylactic Interpolation for Geographical Regions.”</span> <em>Journal of the American Statistical Association</em> 74 (367): 519–30. <a href="https://doi.org/10.1080/01621459.1979.10481647">https://doi.org/10.1080/01621459.1979.10481647</a>.
+</div>
+<div id="ref-wenz2015" class="csl-entry" role="listitem">
+Wenz, Leonie, Sven Norman Willner, Alexander Radebach, Robert Bierkandt, Jan Christoph Steckel, and Anders Levermann. 2015. <span>“REGIONAL AND SECTORAL DISAGGREGATION OF MULTI-REGIONAL INPUT<span></span>OUTPUT TABLES <span></span> A FLEXIBLE ALGORITHM.”</span> <em>Economic Systems Research</em> 27 (2): 194–212. <a href="https://doi.org/10.1080/09535314.2014.987731">https://doi.org/10.1080/09535314.2014.987731</a>.
+</div>
+<div id="ref-you2014" class="csl-entry" role="listitem">
+You, Liangzhi, Stanley Wood, Ulrike Wood-Sichra, and Wenbin Wu. 2014. <span>“Generating Global Crop Distribution Maps: From Census to Grid.”</span> <em>Agricultural Systems</em> 127 (May): 53–60. <a href="https://doi.org/10.1016/j.agsy.2014.01.002">https://doi.org/10.1016/j.agsy.2014.01.002</a>.
+</div>
+<div id="ref-zellner1985" class="csl-entry" role="listitem">
+Zellner, Arnold. 1985. <span>“Bayesian Econometrics.”</span> <em>Econometrica</em> 53 (2): 253. <a href="https://doi.org/10.2307/1911235">https://doi.org/10.2307/1911235</a>.
+</div>
+</div>
 </section></section>
+
     </div>
   </div>
 
