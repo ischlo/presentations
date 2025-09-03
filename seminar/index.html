@@ -387,7 +387,7 @@
 <div class="column" style="width:50%;">
 <h3 id="pros">Pros</h3>
 <ul>
-<li>Simple</li>
+<li>(too ?) Simple</li>
 <li>Efficient</li>
 <li>Global</li>
 </ul>
@@ -411,68 +411,69 @@
 <h2>YES</h2>
 <p>But at a bigger cost.</p>
 <p>The methodology was significantly expanded to use <strong>Bayesian Hierarchical Modelling</strong> (BHM) <span class="citation" data-cites="vandeschoot2021">(<a href="#/references" role="doc-biblioref" onclick="">Schoot et al. 2021</a>)</span>.</p>
-<h3 id="methods">Methods</h3>
-<h4 id="bhm">BHM</h4>
+<p>Thomas Bayes (18th century); Has been long avoided due to technical complications, but has made a comeback since the 80s. Is now used across a wide range is disciplines, from physics and engineering, to economics, social sciences and medicine.</p>
 <div class="columns">
 <div class="column">
 <h3 id="pros-1">Pros</h3>
 <ul>
-<li>Can handle complex data structures</li>
-<li>Allows for uncertainty quantification</li>
-<li>Can incorporate prior knowledge</li>
+<li>Can handle complex data</li>
+<li>Embeds uncertainties about</li>
+<li>Embeds prior (expert) knowledge</li>
 <li>Flexibility</li>
 </ul>
 </div><div class="column">
 <h3 id="cons-1">Cons</h3>
 <ul>
-<li>Gets computationally demanding</li>
+<li>Computationally demanding</li>
 <li>Requires <strong>careful</strong> prior selection</li>
 <li>Sensitive to model specification</li>
-<li>Flexibility</li>
 </ul>
 </div></div>
 <p>Bayesian is generally complex : Theory and formalism (Bayes, Markov Chain Monte Carlo, Information theory, Statistics…), software ecosystem (world of it’s own), PPLs (Probabilistic Programming Languages)…</p>
-<p>As the name suggests, at the core of this method lies the familiar Bayes rule. Let us remind ourselves. If we have two random variables (RV), and we are modelling them together, we might find ourselves asking questions of the nature :</p>
+<p>As the name suggests, at the core of this method lies the familiar Bayes rule. Let us remind ourselves. If we have two phenomena (expressed as RV), we might be asking the following kind of questions:</p>
 <blockquote>
 <p>What is the probability of a joint event, or a conditional event, having observed the outcome of a single one ?</p>
 </blockquote>
 </section>
-<section id="bhm-1" class="slide level2">
+<section id="bhm" class="slide level2">
 <h2>BHM</h2>
 <p>This, in practice, takes the form <span class="math inline">\(p(x,z)\)</span>. And in such cases, Bayes rule tells us that</p>
 <div>
 
 </div>
-<div class="columns quarto-layout-panel" data-layout="[[6,4]]">
+<div class="columns quarto-layout-panel" data-layout="[[7,4]]">
 <div class="quarto-layout-row">
-<div class="column quarto-layout-cell" style="flex-basis: 60.0%;justify-content: flex-start;">
+<div class="column quarto-layout-cell" style="flex-basis: 63.6%;justify-content: flex-start;">
 <p><span class="math display">\[
 p(x,z) = p(z) * p(x|z) \\
 p(x,z) = p(x) * p(z|x)
 \]</span></p>
-<p>We can also rewrite this to link both marginals with the joint one : <span class="math display">\[
-p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
-\]</span></p>
-</div><div class="column quarto-layout-cell" style="flex-basis: 40.0%;justify-content: center;">
+<p>Which can be combined into:</p>
+<p><span class="math display">\[
+p(x) = \frac{p(z) \cdot p(x|z)}{p(z|x)} = \frac{p(x|z)}{p(z|x)}\cdot p(z)
+\]</span> <!-- $$ --> <!-- p(x|z) = \frac{p(x)p(z|x)}{p(z)} = \frac{p(z|x)}{p(z)}\cdot p(x) --> <!-- $$ --></p>
+<p>The first term is called the <em>likelihood</em>. If we can estimate the RHS using <span class="math inline">\(z\)</span>, then we can estimate the marginal of <span class="math inline">\(x\)</span>.</p>
+</div><div class="column quarto-layout-cell" style="flex-basis: 36.4%;justify-content: center;">
 <p><img data-src="imgs/venn.png"></p>
 </div></div>
 </div>
 <p>Now the most important point in BM, is that we apply such reasoning to the parameters of our model. In other words we are asking the question :</p>
 <blockquote>
-<p>What is the probability of observing some data from my model, given it has some specified parameters <span class="math inline">\(\mathbf{\theta}.\)</span></p>
+<p>What are the chances of observing certain data from my model under some parameters <span class="math inline">\(\mathbf{\theta}\)</span> ?</p>
 </blockquote>
+<p>And we refine the parameter if we have some observations <span class="math inline">\(\{X_i\}\)</span>.</p>
 </section>
 <section id="simple-example" class="slide level2">
 <h2>Simple example</h2>
-<p>Let’s say we have some data <span class="math inline">\(\{ X_i \}\)</span> and we model it as <span class="math inline">\(X \sim \mathcal{N(\mu,\sigma)}\)</span>. Usually, we would use the data to make an estimate on the values of <span class="math inline">\((\mu,\sigma)\)</span>, with both parameters fixed and computed from the data. But what is we set the parameters to have variablility ? In such a case, our model on the data becomes parametrised as <span class="math inline">\(p_X \equiv p_X(.|\mu,\sigma)\)</span>. Formally, let’s model the parameters as RVs as well. The values we will draw from our original model will be conditioned on the parameters, which will need to be <em>specified</em> at the sampling stage. This is where Bayesian thinking starts, because we defined an additional probability density, associated to our belief on the values of the parameters, say for the mean <span class="math inline">\(\mu \sim \mathcal{N(\tau,\gamma)}\)</span>. We have a statistical model defined not only for the data, but for the parameters of our model. The distribution on <span class="math inline">\(\mu\)</span> as well as the one for <span class="math inline">\(X\)</span> form our <strong>prior</strong>, encompassing the best of our knowledge about the observed phenomenon. The parameters <span class="math inline">\((\tau,\gamma)\)</span> are referred to as <strong>hyper-parameters</strong> and can be used to fine tune our belief on the mean of the data we observe and sample down the way.</p>
+<p>Let’s say we have some data <span class="math inline">\(\{ X_i \}\)</span> and we model it as <span class="math inline">\(X \sim \mathcal{N(\mu,\sigma)}\)</span>. Usually, we would use the data to make an estimate on the values of <span class="math inline">\((\mu,\sigma)\)</span>, with both parameters fixed and computed from the data. But what if we set one parameter to have variability? In this case, the model becomes parametrised as <span class="math inline">\(p_X \equiv p_X(.|\mu)\)</span>. Formally, let’s model the parameters as RVs as well. The values we will draw from our original model will be conditioned on the parameter, which will itself be sampled. This is where Bayesian thinking. We defined an additional probability density, associated to our belief on the values of the mean <span class="math inline">\(\mu \sim \mathcal{N(\tau,\gamma)}\)</span>. We have a model defined not only for the data, but for the parameters of our model. The distribution on <span class="math inline">\(\mu\)</span> as well as the one for <span class="math inline">\(X\)</span> form our <strong>prior</strong>, encompassing the best of our knowledge about the observed phenomenon. The parameters <span class="math inline">\((\tau,\gamma)\)</span> are referred to as <strong>hyper-parameters</strong> and can be used to fine tune our belief on the mean of the data we observe and sample down the way.</p>
 <h3 id="what-about-observed-data">What about observed data ?</h3>
 <div class="columns">
 <div class="column">
-<p>Let’s say now we have some observed sample data <span class="math inline">\(\{X_i\}\)</span>. Having laid a general behaviour for our model in the previous paragraph, we can now turn to it and ask the question :</p>
+<p>Let’s say now we have some observed sample data <span class="math inline">\(\{X_i\}\)</span>. Having laid a general behavior for the model, we can now turn to it and ask the question :</p>
 <blockquote>
-<p>“What are the chances of observing the sample <span class="math inline">\(\{X_i\}\)</span> in our model, conditioned to the parameters <span class="math inline">\(\vec{\mathbf{\theta}} = \{\mu, \sigma\}\)</span> ?”</p>
+<p>“What are the chances of observing the sample <span class="math inline">\(\{X_i\}\)</span> in our model, conditioned to the parameter <span class="math inline">\(\mu\)</span> ?”</p>
 </blockquote>
-<p>In other words we are looking at <span class="math inline">\(p(\{X_i\}|\mu,\sigma)\)</span>, recall Bayes rule from an earlier slide. We call this the <strong>likelihood function</strong>.</p>
+<p>In other words we are looking at <span class="math inline">\(p(\{X_i\}|\mu)\)</span>, recall Bayes rule from an earlier slide.</p>
 <p>Ex : Height distribution in human population</p>
 </div><div class="column">
 <p><img data-src="imgs/simple_BHM_model.png"></p>
@@ -509,21 +510,17 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <tr class="even">
 <td><strong>Posterior</strong></td>
 <td><span class="math inline">\(f(.|\theta)\pi(\theta|\{X_i\})\)</span></td>
-<td><span class="math inline">\(\pi(\theta|\{X_i\})\)</span></td>
-</tr>
-<tr class="odd">
-<td><strong>Predictive</strong></td>
-<td><span class="math inline">\(Y \sim f(.|\theta, \{X_i\})\)</span></td>
-<td><span class="math inline">\(\pi(\theta|\{X_i\})\)</span></td>
+<td><span class="math inline">\(\pi(\theta|\{X_i\}) \propto f(X|\theta) \cdot \pi(\theta)\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>Where the family of <span class="math inline">\(f\)</span> is a choice of the user that can have a huge impact on the modelling. In our case, the choice was done for <span class="math inline">\(LogNormal\)</span>.</p>
+<!-- | **Predictive** | $Y \sim f(.|\theta, \{X_i\})$    | $\pi(\theta|\{X_i\})$ | -->
+<p>Where the family of <span class="math inline">\(f\)</span> is a choice of the user that can have a huge impact on the modelling.</p>
 </section>
 <section id="spatial-economic-activity" class="slide level2">
 <h2>Spatial Economic Activity</h2>
 <h3 id="how-do-we-develop-a-downscaling-model-with-this">How do we develop a downscaling model with this ?</h3>
-<p>After this summary, we get in the specific details of our problem. The idea is to embed an econometrics model predicting the fine scale values into this Bayesian framework. On the one hand informing the behavior at the fine spatial scale, dictated by the econometrics model, and controlling that this behavior aligns with our prior knowledge and constraints at the coarse spatial and sector scale through the BHM.</p>
+<p>After this rushed summary, we get in the specific details of our problem. The idea is to embed an econometrics model predicting the fine scale values into this Bayesian framework. On the one hand informing the behavior at the fine spatial scale, dictated by the econometrics model, and controlling that this behavior aligns with our prior knowledge and constraints at the coarse spatial and sector scale through the BHM.</p>
 <div class="r-stack">
 <div class="columns fragment">
 <div class="column">
@@ -552,12 +549,14 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 </section>
 <section id="econometrics-modelling" class="slide level2">
 <h2>Econometrics modelling</h2>
-<p>We use a simplified linear model, inspired by (spatial) econometrics<span class="citation" data-cites="anselin1988 redding2024 zellner1985">(<a href="#/references" role="doc-biblioref" onclick="">Anselin 1988</a>; <a href="#/references" role="doc-biblioref" onclick="">Redding 2024</a>; <a href="#/references" role="doc-biblioref" onclick="">Zellner 1985</a>)</span>, to <em>inform</em> the bayesian method on how we expect our predictor variables to be linked to the industry level output. We apply this model at the fine resolution to every location that has some non-zero predictor variable.</p>
+<p>We use a linear model, inspired by (spatial) econometrics<span class="citation" data-cites="anselin1988 redding2024 zellner1985">(<a href="#/references" role="doc-biblioref" onclick="">Anselin 1988</a>; <a href="#/references" role="doc-biblioref" onclick="">Redding 2024</a>; <a href="#/references" role="doc-biblioref" onclick="">Zellner 1985</a>)</span>, to <em>inform</em> the bayesian method on how we expect our predictor variables to be linked to the industry level output. We apply this model at the fine resolution to every location that has some non-zero predictor variable.</p>
 <p><span class="math display">\[
 \mu_{S_i} = \sum_m \omega_m * x_m
 \]</span></p>
-<p>where <span class="math inline">\(\omega_m\)</span> are learned parameters and <span class="math inline">\(x_m\)</span> are the proxy variables that we assign to the relevant sectors. The result is a multilinear model, where some variables where masked, based on reasonable assumptions on their impact on a particular output, this steps refers to the <em>expert knowledge</em> that Bayesian methods rely on. Additionally, selecting only most relevant variables for each output helps reduce the dimensionality of the problem, which poses great challenges in the context of often lacking data to validate or inform the model.</p>
-<p>The linear model in turn yields a value <span class="math inline">\(\mu_{S_i}\)</span> for a specific sector, which is interpreted as a mean value for a secor in a location by the Bayesian method and is combined with an uncertainty metric <span class="math inline">\(\sigma\)</span> measured before hand as the average availability of data in the system. The tuple of values <span class="math inline">\((\mu_{S_i}, \sigma)\)</span>, with <span class="math inline">\(\sigma\)</span> fixed and <span class="math inline">\(\mu_{S_i}\)</span> which is obtained from the sampled linear combination of the <span class="math inline">\(\alpha\)</span> parameters.</p>
+<p>where <span class="math inline">\(\omega_m\)</span> are learned parameters and <span class="math inline">\(x_m\)</span> are the proxy variables that we assign to the relevant sectors. The result is a set of linear equations, one for each sector, with chosen variables for each sector. We select only a subset of the available variables for each output to reduce the dimensionality of the problem and simplify our <em>prior</em>.</p>
+<p>The linear model in turn yields a value <span class="math inline">\(\mu_{S_i}\)</span> for a specific sector, which is interpreted as a mean value for a sector in a location by the Bayesian method and is combined with an uncertainty metric <span class="math inline">\(\sigma\)</span> measured before hand as the average availability of data in the system. The tuple of values <span class="math inline">\((\mu_{S_i}, \sigma)\)</span>, with <span class="math inline">\(\sigma\)</span> fixed and <span class="math inline">\(\mu_{S_i}\)</span> obtained from the sampled linear combination of the <span class="math inline">\(\alpha\)</span> parameters, are then used as parameters in a <span class="math inline">\(LogNormal\)</span> model predicting the economic activity of a location.</p>
+<p><span class="math display">\[Y_{S_i} \sim LogNormal(\mu_{S_i}, \sigma)\]</span> We integrate our coarse spatial and sectorial output constraints by adding aggregation layers, which sum up the high resolution values and verify their validity with the observed totals at whatever resolution they are available.</p>
+<p>Further, we introduce an normal noise <span class="math inline">\(\mathcal{N}(\mathcal{S_k}, \frac{\mathcal{S_k}}{10})\)</span> on the reported outputs, which helps avoiding to set hard constraints and can be helpful down the way when dealing with uncertain reports.</p>
 </section>
 <section id="all-together" class="slide level2">
 <h2>All together</h2>
@@ -568,35 +567,29 @@ p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
 <div>
 
 </div>
-<div class="columns quarto-layout-panel" data-layout="[[1,2]]" data-fontsize="10">
+<div class="columns quarto-layout-panel" data-fontsize="10" data-layout="[[1,2]]">
 <div class="quarto-layout-row">
 <div class="column quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
 <h3 id="input1">Input<sup>1</sup></h3>
 <h4 id="current">Current</h4>
-<p>POIs, GHSL NRES, DOSE-WDI, Copernicus, GHSL pop, Bureau of Economic Analysis (BEA), ILOSTAT, UK Business Value Added, EU IO tables</p>
+<p>POIs, GHSL NRES, DOSE-WDI, Copernicus, GHSL pop, Bureau of Economic Analysis (BEA), <em>ILOSTAT</em>, <em>UK Business Value Added</em>, <em>EU IO tables</em></p>
 <h3 id="validation">Validation</h3>
 <ul>
 <li>Kummu</li>
 <li>Bea</li>
-<li>EU IO</li>
-<li>Null model (OLD)</li>
+<li><em>EU IO</em></li>
+<li><em>Null model (OLD)</em></li>
 </ul>
 <h3 id="subsectors">Subsectors</h3>
-<ul>
-<li>GEM</li>
-<li>CGFI</li>
-<li>Climatrace</li>
-<li>Edgar</li>
-<li>MAPSPAM</li>
-</ul>
+<p><em>GEM</em>, <em>CGFI</em>, <em>Climatrace</em>, <em>Edgar</em>, <em>MAPSPAM</em></p>
 </div><div class="column quarto-layout-cell" style="flex-basis: 66.7%;justify-content: center;">
 <h3 id="catalogue">Catalogue</h3>
-<p>Is up on the cluster with access and manipulation facilitated by the <a href="https://github.com/nismod/scale-nav"><code>scalenav</code></a> package</p>
+<p>Is up on the cluster with access and manipulation facilitated by the <code>scalenav</code><sup>2</sup> package</p>
 <p><img data-src="imgs/isic_section_coverage.png"></p>
 </div></div>
 </div>
 <!-- end columns -->
-<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="janssens-maenhout2019">Janssens-Maenhout et al. (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span>; <span class="citation" data-cites="europeancommission.jointresearchcentre.2023">European Commission. Joint Research Centre. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>; <span class="citation" data-cites="gaulier2010">Gaulier and Zignago (<a href="#/references" role="doc-biblioref" onclick="">2010</a>)</span>; <span class="citation" data-cites="kummu2018a">Kummu, Taka, and Guillaume (<a href="#/references" role="doc-biblioref" onclick="">2018a</a>)</span>; <span class="citation" data-cites="you2014">You et al. (<a href="#/references" role="doc-biblioref" onclick="">2014</a>)</span>; <span class="citation" data-cites="wenz2015">Wenz et al. (<a href="#/references" role="doc-biblioref" onclick="">2015</a>)</span> …</p></li></ol></aside></section></section>
+<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="janssens-maenhout2019">Janssens-Maenhout et al. (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span>; <span class="citation" data-cites="europeancommission.jointresearchcentre.2023">European Commission. Joint Research Centre. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>; <span class="citation" data-cites="gaulier2010">Gaulier and Zignago (<a href="#/references" role="doc-biblioref" onclick="">2010</a>)</span>; <span class="citation" data-cites="kummu2018a">Kummu, Taka, and Guillaume (<a href="#/references" role="doc-biblioref" onclick="">2018a</a>)</span>; <span class="citation" data-cites="you2014">You et al. (<a href="#/references" role="doc-biblioref" onclick="">2014</a>)</span>; <span class="citation" data-cites="wenz2015">Wenz et al. (<a href="#/references" role="doc-biblioref" onclick="">2015</a>)</span> …</p></li><li id="fn2"><p>https://github.com/nismod/scale-nav</p></li></ol></aside></section></section>
 <section>
 <section id="lets-see-some-results" class="title-slide slide level1 center">
 <h1>Let’s see some results !</h1>

@@ -44,7 +44,7 @@ bibliography: references.bib
 ::: {.column width="50%"}
 ### Pros
 
--   Simple
+-   (too ?) Simple 
 -   Efficient
 -   Global
 
@@ -56,6 +56,7 @@ bibliography: references.bib
 -   No flexibility
 
 ### Can we do better ?
+
 :::
 
 ::: {.column width="50%"}
@@ -69,33 +70,34 @@ But at a bigger cost.
 
 The methodology was significantly expanded to use **Bayesian Hierarchical Modelling** (BHM) [@vandeschoot2021].
 
-### Methods
-
-#### BHM
+Thomas Bayes (18th century); Has been long avoided due to technical complications, but has made a comeback since the 80s. Is now used across a wide range is disciplines, from physics and engineering, to economics, social sciences and medicine.
 
 ::: columns
 ::: column
+
 ### Pros
 
--   Can handle complex data structures
--   Allows for uncertainty quantification
--   Can incorporate prior knowledge
+-   Can handle complex data
+-   Embeds uncertainties about
+-   Embeds prior (expert) knowledge
 -   Flexibility
+
 :::
 
 ::: column
+
 ### Cons
 
--   Gets computationally demanding
+-   Computationally demanding
 -   Requires **careful** prior selection
 -   Sensitive to model specification
--   Flexibility
+
 :::
 :::
 
 Bayesian is generally complex : Theory and formalism (Bayes, Markov Chain Monte Carlo, Information theory, Statistics...), software ecosystem (world of it's own), PPLs (Probabilistic Programming Languages)...
 
-As the name suggests, at the core of this method lies the familiar Bayes rule. Let us remind ourselves. If we have two random variables (RV), and we are modelling them together, we might find ourselves asking questions of the nature :
+As the name suggests, at the core of this method lies the familiar Bayes rule. Let us remind ourselves. If we have two phenomena (expressed as RV), we might be asking the following kind of questions:
 
 > What is the probability of a joint event, or a conditional event, having observed the outcome of a single one ?
 
@@ -103,16 +105,24 @@ As the name suggests, at the core of this method lies the familiar Bayes rule. L
 
 This, in practice, takes the form $p(x,z)$. And in such cases, Bayes rule tells us that
 
-::: {.columns layout="[[6,4]]"}
+::: {.columns layout="[[7,4]]"}
 ::: column
 $$
 p(x,z) = p(z) * p(x|z) \\
 p(x,z) = p(x) * p(z|x)
 $$
 
-We can also rewrite this to link both marginals with the joint one : $$
-p(x) = \frac{p(z) * p(x|z)}{p(z|x)}
+Which can be combined into: 
+
 $$
+p(x) = \frac{p(z) \cdot p(x|z)}{p(z|x)} = \frac{p(x|z)}{p(z|x)}\cdot p(z)
+$$
+<!-- $$ -->
+<!-- p(x|z) = \frac{p(x)p(z|x)}{p(z)} = \frac{p(z|x)}{p(z)}\cdot p(x) -->
+<!-- $$ -->
+
+The first term is called the *likelihood*. If we can estimate the RHS using $z$, then we can estimate the marginal of $x$.
+
 :::
 
 ::: column
@@ -122,23 +132,27 @@ $$
 
 Now the most important point in BM, is that we apply such reasoning to the parameters of our model. In other words we are asking the question :
 
-> What is the probability of observing some data from my model, given it has some specified parameters $\mathbf{\theta}.$
+> What are the chances of observing certain data from my model under some parameters $\mathbf{\theta}$ ?
+
+And we refine the parameter if we have some observations $\{X_i\}$.
 
 ## Simple example
 
-Let's say we have some data $\{ X_i \}$ and we model it as $X \sim \mathcal{N(\mu,\sigma)}$. Usually, we would use the data to make an estimate on the values of $(\mu,\sigma)$, with both parameters fixed and computed from the data. But what is we set the parameters to have variablility ? In such a case, our model on the data becomes parametrised as $p_X \equiv p_X(.|\mu,\sigma)$. Formally, let's model the parameters as RVs as well. The values we will draw from our original model will be conditioned on the parameters, which will need to be *specified* at the sampling stage. This is where Bayesian thinking starts, because we defined an additional probability density, associated to our belief on the values of the parameters, say for the mean $\mu \sim \mathcal{N(\tau,\gamma)}$. We have a statistical model defined not only for the data, but for the parameters of our model. The distribution on $\mu$ as well as the one for $X$ form our **prior**, encompassing the best of our knowledge about the observed phenomenon. The parameters $(\tau,\gamma)$ are referred to as **hyper-parameters** and can be used to fine tune our belief on the mean of the data we observe and sample down the way.
+Let's say we have some data $\{ X_i \}$ and we model it as $X \sim \mathcal{N(\mu,\sigma)}$. Usually, we would use the data to make an estimate on the values of $(\mu,\sigma)$, with both parameters fixed and computed from the data. But what if we set one parameter to have variability? In this case, the model becomes parametrised as $p_X \equiv p_X(.|\mu)$. Formally, let's model the parameters as RVs as well. The values we will draw from our original model will be conditioned on the parameter, which will itself be sampled. This is where Bayesian thinking. We defined an additional probability density, associated to our belief on the values of the mean $\mu \sim \mathcal{N(\tau,\gamma)}$. We have a model defined not only for the data, but for the parameters of our model. The distribution on $\mu$ as well as the one for $X$ form our **prior**, encompassing the best of our knowledge about the observed phenomenon. The parameters $(\tau,\gamma)$ are referred to as **hyper-parameters** and can be used to fine tune our belief on the mean of the data we observe and sample down the way.
 
 ### What about observed data ?
 
 ::: columns
 ::: column
-Let's say now we have some observed sample data $\{X_i\}$. Having laid a general behaviour for our model in the previous paragraph, we can now turn to it and ask the question :
 
-> "What are the chances of observing the sample $\{X_i\}$ in our model, conditioned to the parameters $\vec{\mathbf{\theta}} = \{\mu, \sigma\}$ ?"
+Let's say now we have some observed sample data $\{X_i\}$. Having laid a general behavior for the model, we can now turn to it and ask the question :
 
-In other words we are looking at $p(\{X_i\}|\mu,\sigma)$, recall Bayes rule from an earlier slide. We call this the **likelihood function**.
+> "What are the chances of observing the sample $\{X_i\}$ in our model, conditioned to the parameter $\mu$ ?"
+
+In other words we are looking at $p(\{X_i\}|\mu)$, recall Bayes rule from an earlier slide.
 
 Ex : Height distribution in human population
+
 :::
 
 ::: column
@@ -165,16 +179,16 @@ The method allows us to fine tune the posterior distribution, by sampling synthe
 |                | **Data**                         | **Parameters**        |
 |----------------|----------------------------------|-----------------------|
 | **Prior**      | $f(.|\theta)$                    | $\pi(\theta)$         |
-| **Posterior**  | $f(.|\theta)\pi(\theta|\{X_i\})$ | $\pi(\theta|\{X_i\})$ |
-| **Predictive** | $Y \sim f(.|\theta, \{X_i\})$    | $\pi(\theta|\{X_i\})$ |
+| **Posterior**  | $f(.|\theta)\pi(\theta|\{X_i\})$ | $\pi(\theta|\{X_i\}) \propto f(X|\theta) \cdot \pi(\theta)$ |
+<!-- | **Predictive** | $Y \sim f(.|\theta, \{X_i\})$    | $\pi(\theta|\{X_i\})$ | -->
 
-Where the family of $f$ is a choice of the user that can have a huge impact on the modelling. In our case, the choice was done for $LogNormal$.
+Where the family of $f$ is a choice of the user that can have a huge impact on the modelling.
 
 ## Spatial Economic Activity
 
 ### How do we develop a downscaling model with this ?
 
-After this summary, we get in the specific details of our problem. The idea is to embed an econometrics model predicting the fine scale values into this Bayesian framework. On the one hand informing the behavior at the fine spatial scale, dictated by the econometrics model, and controlling that this behavior aligns with our prior knowledge and constraints at the coarse spatial and sector scale through the BHM.
+After this rushed summary, we get in the specific details of our problem. The idea is to embed an econometrics model predicting the fine scale values into this Bayesian framework. On the one hand informing the behavior at the fine spatial scale, dictated by the econometrics model, and controlling that this behavior aligns with our prior knowledge and constraints at the coarse spatial and sector scale through the BHM.
 
 ::: r-stack
 ::: {.columns .fragment}
@@ -198,15 +212,20 @@ After this summary, we get in the specific details of our problem. The idea is t
 
 ## Econometrics modelling
 
-We use a simplified linear model, inspired by (spatial) econometrics[@anselin1988; @redding2024; @zellner1985], to *inform* the bayesian method on how we expect our predictor variables to be linked to the industry level output. We apply this model at the fine resolution to every location that has some non-zero predictor variable.
+We use a linear model, inspired by (spatial) econometrics[@anselin1988; @redding2024; @zellner1985], to *inform* the bayesian method on how we expect our predictor variables to be linked to the industry level output. We apply this model at the fine resolution to every location that has some non-zero predictor variable.
 
 $$
 \mu_{S_i} = \sum_m \omega_m * x_m
 $$
 
-where $\omega_m$ are learned parameters and $x_m$ are the proxy variables that we assign to the relevant sectors. The result is a multilinear model, where some variables where masked, based on reasonable assumptions on their impact on a particular output, this steps refers to the *expert knowledge* that Bayesian methods rely on. Additionally, selecting only most relevant variables for each output helps reduce the dimensionality of the problem, which poses great challenges in the context of often lacking data to validate or inform the model.
+where $\omega_m$ are learned parameters and $x_m$ are the proxy variables that we assign to the relevant sectors. The result is a set of linear equations, one for each sector, with chosen variables for each sector. We select only a subset of the available variables for each output to reduce the dimensionality of the problem and simplify our *prior*.
 
-The linear model in turn yields a value $\mu_{S_i}$ for a specific sector, which is interpreted as a mean value for a secor in a location by the Bayesian method and is combined with an uncertainty metric $\sigma$ measured before hand as the average availability of data in the system. The tuple of values $(\mu_{S_i}, \sigma)$, with $\sigma$ fixed and $\mu_{S_i}$ which is obtained from the sampled linear combination of the $\alpha$ parameters.
+The linear model in turn yields a value $\mu_{S_i}$ for a specific sector, which is interpreted as a mean value for a sector in a location by the Bayesian method and is combined with an uncertainty metric $\sigma$ measured before hand as the average availability of data in the system. The tuple of values $(\mu_{S_i}, \sigma)$, with $\sigma$ fixed and $\mu_{S_i}$ obtained from the sampled linear combination of the $\alpha$ parameters, are then used as parameters in a $LogNormal$ model predicting the economic activity of a location.
+
+$$Y_{S_i} \sim LogNormal(\mu_{S_i}, \sigma)$$
+We integrate our coarse spatial and sectorial output constraints by adding aggregation layers, which sum up the high resolution values and verify their validity with the observed totals at whatever resolution they are available. 
+
+Further, we introduce an normal noise $\mathcal{N}(\mathcal{S_k}, \frac{\mathcal{S_k}}{10})$ on the reported outputs, which helps avoiding to set hard constraints and can be helpful down the way when dealing with uncertain reports.
 
 ## All together
 
@@ -216,38 +235,42 @@ The linear model in turn yields a value $\mu_{S_i}$ for a specific sector, which
 
 ::: {.columns layout="[[1,2]]" fontsize="10"}
 ::: column
+
 ### Input[^1]
 
 #### Current
 
-POIs, GHSL NRES, DOSE-WDI, Copernicus, GHSL pop, Bureau of Economic Analysis (BEA), ILOSTAT, UK Business Value Added, EU IO tables
+POIs, GHSL NRES, DOSE-WDI, Copernicus, GHSL pop, Bureau of Economic Analysis (BEA), *ILOSTAT*, *UK Business Value Added*, *EU IO tables*
 
 ### Validation
 
 -   Kummu
 -   Bea
--   EU IO
--   Null model (OLD)
+-   *EU IO*
+-   *Null model (OLD)*
 
 ### Subsectors
 
--   GEM
--   CGFI
--   Climatrace
--   Edgar
--   MAPSPAM
+*GEM*, *CGFI*, *Climatrace*, *Edgar*, *MAPSPAM*
+
+
 :::
 
 ::: column
+
 ### Catalogue
 
-Is up on the cluster with access and manipulation facilitated by the [`scalenav`](https://github.com/nismod/scale-nav) package
+Is up on the cluster with access and manipulation facilitated by the `scalenav`[^2] package
 
 ![](imgs/isic_section_coverage.png)
+
+
 :::
 :::
 
 [^1]: @janssens-maenhout2019; @europeancommission.jointresearchcentre.2023; @gaulier2010; @kummu2018a; @you2014; @wenz2015 ...
+
+[^2]: https://github.com/nismod/scale-nav
 
 <!-- end columns -->
 
