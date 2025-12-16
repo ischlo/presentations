@@ -432,6 +432,8 @@ The python variable `expr` that we created, represents an unrealised SQL express
 
 ## Extensions
 
+
+
 More here:
 - Official: https://duckdb.org/docs/stable/core_extensions/overview 
 - Community: https://duckdb.org/community_extensions/
@@ -445,7 +447,7 @@ Docs: https://github.com/duckdb/duckdb-spatial
 Blog: https://motherduck.com/blog/geospatial-for-beginner-duckdb-spatial-motherduck/
 
 #### QuackOSM
-For Reading raw OSM buffer files directly into a duckdb database with a convenient data schema.
+For Reading raw OSM buffer files directly into a DuckDB database with a convenient data schema.
 
 https://github.com/kraina-ai/quackosm
 
@@ -471,6 +473,12 @@ A package I developed as part of my work in OPSIS to build global geospatial ana
 - https://pipeline2insights.substack.com/p/pandas-vs-polars-vs-duckdb-vs-pyspark-benchmarking-real-experiments
 
 ## DOCS
+
+### Example Notebooks
+
+Reading OSM data with `QuakOSM` : [osm.ipynb](https://github.com/nismod/global-econ-data/blob/main/notebooks/osm.ipynb)
+
+Reading and Processing the US Bureau of economic analysis data : [us_bea.ipynb](https://github.com/nismod/global-econ-data/blob/main/notebooks/us_bea.ipynb)
 
 ### SQL 
 
