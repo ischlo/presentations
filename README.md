@@ -15,5 +15,5 @@
   target="_blank">Interpolating global economic activity data</a>
 - [03/09/2025 : OPSIS
   Seminar](https://ischlo.github.io/presentations/seminar)
-- [Software](https://ischlo.github.io/presentations/seminar/ibis_workshop)[Carpentry](https://ischlo.github.io/presentations/ibis_workshop)[:
-  ibis](https://ischlo.github.io/presentations/seminar/ibis_workshop)[workshop](https://ischlo.github.io/presentations/ibis_workshop)
+- [Software Carpentry : ibis
+  workshop](https://ischlo.github.io/presentations/ibis_workshop)
